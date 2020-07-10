@@ -7,32 +7,22 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-## R Markdown
-
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
-
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
-
-```{r cars}
+```{r load}
 library(tidyverse)
 all_data <- read_delim("/Users/chiarasemenzin/Downloads/CR_alldata.csv", delim=';',col_types = cols(.default = "c"))
 ```
 
-## Including Plots
-
-You can also embed plots, for example:
-
-```{r pressure, echo=FALSE}
+```{r analysis, echo=FALSE}
 library(ggplot2)
 
 data.sub <- subset(all_data, corpus != "Warlaumont" & corpus != "Cychosz" & `Age in months`<=50)
 data.sub$CR=as.numeric(data.sub$CR)
 data.sub$`Age in months`=as.numeric(data.sub$`Age in months`)
-# Add regression lines
+
 ggplot(data.sub, aes(x=`Age in months`, y=CR, color=Language)) +
   geom_point()
 
-
+# Add regression lines
 ggplot(data.sub, aes(x=`Age in months`, y=CR, color=Language)) +
   geom_point() + 
   geom_smooth(method=lm,se=FALSE)
