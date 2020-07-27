@@ -1,5 +1,5 @@
 library(tidyverse)
-all_data <- read_delim("./CR_alldata.csv", delim=';',col_types = cols(.default = "c"))
+all_data <- read_delim("./Data/CR_alldata.csv", delim=';',col_types = cols(.default = "c"))
 library(ggplot2)
 
 data.sub <- subset(all_data, corpus != "Warlaumont" & corpus != "Cychosz" & `Age in months`<=50)
