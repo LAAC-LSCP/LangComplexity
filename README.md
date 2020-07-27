@@ -26,6 +26,7 @@ You can make changes to the code locally on your machine which will be tracked a
 Next time you launch the binder these changes will show up.
 
 
+For more information about Binder visit this link: https://mybinder.readthedocs.io/en/latest/index-getting-started.html
 
 Author: Chiara Semenzin
 
