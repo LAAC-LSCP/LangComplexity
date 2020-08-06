@@ -8,6 +8,10 @@ docloc='https://docs.google.com/spreadsheets/d/e/2PACX-1vSzvJcT6yT9_fpRoFg5O7LAp
 myfile <- getURL(docloc, ssl.verifyhost=FALSE, ssl.verifypeer=FALSE)
 all_data<- read.csv(textConnection(myfile), header=T)
 
+#oh no, that's not working anymore...
+all_data<- read.csv("./Data/CR_by_child-updated_3_08.xlsx - MAIN.csv", header=T,sep=",")
+
+
 summary(all_data)
 dim(all_data)
 
@@ -15,7 +19,7 @@ dim(all_data)
 # apply exclusions
 #data.sub <- subset(all_data,  Age_in_months<=50)
 #removed: corpus != "Warlaumont" & corpus != "Cychosz" & because we decided to include bilinguals
-data.sub<-all_data
+all_data->data.sub
 
 #correct some data issues
 data.sub$CR=as.numeric(gsub(",",".",data.sub$CR))
@@ -23,6 +27,8 @@ data.sub$SylComp=factor(data.sub$Syllable.complexity,levels=c("Low","Moderate","
 data.sub$Age=as.numeric(gsub(",",".",data.sub$Age.in.months))
 data.sub$Age2=data.sub$Age^2 #generate squared component
 data.sub$Age3=data.sub$Age^3 #generate cubic component
+
+data.sub<-subset(data.sub, !is.na(SylComp))
 
 
 # add more information
@@ -103,7 +109,9 @@ summary(mod_int_age_noTsi)
 ggplot(data.sub, aes(x=Age, y=CR, color=SylComp)) +
   geom_point()+
   # Add regression lines
-  geom_smooth(method=lm,se=FALSE)
+ # geom_smooth(method=lm)+
+  # Add loess lines
+  geom_smooth(span = 0.8)
 
 
 # scale ages, so that intercept corresponds to mean age
@@ -126,3 +134,13 @@ plot(mod_int_age_noTsi_ageScaled_no_old) #looks ok
 gvlma(mod_int_age_noTsi_ageScaled_no_old) #checks ok
 Anova(mod_int_age_noTsi_ageScaled_no_old, type="III") 
 summary(mod_int_age_noTsi_ageScaled_no_old)
+
+#replot without kids over 40
+data.sub_under40=subset(data.sub, Age<40 & corpus!="Warlaumont")
+# plot data
+ggplot(data.sub_under40, aes(x=Age, y=CR, color=SylComp)) +
+  geom_point()+
+  # Add regression lines
+  # geom_smooth(method=lm)+
+  # Add loess lines
+  geom_smooth(span = 0.8)
