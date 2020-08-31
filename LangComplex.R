@@ -8,9 +8,11 @@ docloc='https://docs.google.com/spreadsheets/d/e/2PACX-1vSzvJcT6yT9_fpRoFg5O7LAp
 myfile <- getURL(docloc, ssl.verifyhost=FALSE, ssl.verifypeer=FALSE)
 all_data<- read.csv(textConnection(myfile), header=T)
 
+# if there is a new version of the data file, get it from here: 
+# https://docs.google.com/spreadsheets/d/1rhpTqgpv9VgsZOtoEHqxwShYrZIsbiB_/edit#gid=1860768761
+
 #oh no, that's not working anymore...
 all_data<- read.csv("./Data/CR_by_child-updated_3_08.xlsx - MAIN.csv", header=T,sep=";")
-
 
 summary(all_data)
 dim(all_data)
