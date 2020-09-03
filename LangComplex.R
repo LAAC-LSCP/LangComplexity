@@ -11,7 +11,7 @@ all_data<- read.csv(textConnection(myfile), header=T)
 # if there is a new version of the data file, get it from here: 
 # https://docs.google.com/spreadsheets/d/1rhpTqgpv9VgsZOtoEHqxwShYrZIsbiB_/edit#gid=1860768761
 
-#oh no, that's not working anymore...
+#an error can be solved by using ";" as a separator
 all_data<- read.csv("./Data/CR_by_child-updated_3_08.xlsx - MAIN.csv", header=T,sep=";")
 
 summary(all_data)
@@ -40,10 +40,12 @@ data.sub$coding<-ifelse(data.sub$corpus %in% c("Solomon","French"),"lab","citsci
 table(data.sub$corpus)
 table(data.sub$Language) #shows N kids per language
 table(data.sub$SylComp,data.sub$Language)  #notice that all the moderate data comes from Tsimane
-hist(data.sub$CR) #quite normally distributed
-hist(data.sub$CR[data.sub$SylComp=="Low"],main="CR (Low SylComp)") #looks ok
-hist(data.sub$CR[data.sub$SylComp=="Moderate"],main="CR (Moderate SylComp)")  #less good, quite flat
-hist(data.sub$CR[data.sub$SylComp=="High"],main="CR (High SylComp)") #idem
+
+#histograms
+hist(data.sub$CR,main="CR",xlab="CR") #quite normally distributed
+hist(data.sub$CR[data.sub$SylComp=="Low"],main="Low Syllable Complexity",xlab="CR") #looks ok
+hist(data.sub$CR[data.sub$SylComp=="Moderate"],main="Moderate Syllable Complexity",xlab="CR")  #less good, quite flat
+hist(data.sub$CR[data.sub$SylComp=="High"],main="High Syllable Complexity",xlab="CR") #idem
 
 # plot data
 ggplot(data.sub, aes(x=Age, y=CR, color=Language)) +
