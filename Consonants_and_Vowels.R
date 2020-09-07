@@ -60,7 +60,7 @@ ggplot(data.sub, aes(x=Age, y=CR, color=Language)) +
 
 
 # Fit most complex model
-mod_complex=lm(CR~Age*SylComp+Age2*SylComp+Age3*SylComp,data=data.sub)
+mod_complex=lm(CR~Age*C_count+Age2*C_count+Age3*C_count,data=data.sub)
 
 #check for assumptions
 plot(mod_complex) #looks pretty ok

@@ -1,9 +1,9 @@
 ChildID,Gender,Age in months,CR,CR Adults,Language,corpus,Syllable complexity,Multinlingualism_likelihood
-1_CW1_CH1_AJ09_AJ21_190710_1_periodic_non-native-NK.eaf,M,48,"0,512195122","7,642146024",Avaso,Solomon,Low,Y
-1_CW4_CH4_AJ10_AJ21_190715_1_periodic_non-native-NM.eaf,M,24,"0,4871794872","2,660714286",Avasö,Solomon,Low,Y
-1_CW4_CH4_AJ11_AJ04_190718_periodic_non-native-NK.eaf,F,17,"0,368421053","4,635027292",Avasu,Solomon,Low,Y
-1_CW2_CH2_AJ07_AJ07_190630_1_periodic_non-native-NM.eaf,M,36,"0,7538461538","2,745719721",Babatana,Solomon,Low,Y
-1_CW3_CH3_AJ08_AJ13_190704_periodic_non-native-NK.eaf,M,24,"0,481927711","12,32701602",Babatana and Senga,Solomon,Low,Y
+1_CW1_CH1_AJ09_AJ21_190710_1_periodic_non-native-NK.eaf,M,48,"0,512195122","0,8992805755",Avaso,Solomon,Low,Y
+1_CW4_CH4_AJ10_AJ21_190715_1_periodic_non-native-NM.eaf,M,24,"0,4871794872","0,9032258065",Avasö,Solomon,Low,Y
+1_CW4_CH4_AJ11_AJ04_190718_periodic_non-native-NK.eaf,F,17,"0,368421053","0,9480519481",Avasu,Solomon,Low,Y
+1_CW2_CH2_AJ07_AJ07_190630_1_periodic_non-native-NM.eaf,M,36,"0,7538461538","0,9068627451",Babatana,Solomon,Low,Y
+1_CW3_CH3_AJ08_AJ13_190704_periodic_non-native-NK.eaf,M,24,"0,481927711","0,9268292683",Babatana and Senga,Solomon,Low,Y
 26Seedlings,M,7,"0,3258426966",,English,Seedlings,High,N
 36Seedlings,F,7,"0,125",,English,Seedlings,High,N
 04Seedlings,M,8,"0,253164557",,English,Seedlings,High,N
@@ -17,28 +17,28 @@ ChildID,Gender,Age in months,CR,CR Adults,Language,corpus,Syllable complexity,Mu
 274Warlaumont,F,3,"0,6615384615",,English & Spanish,Warlaumont,High,Y
 340Warlaumont,F,3,"0,5",,English & Spanish,Warlaumont,High,Y
 857Warlaumont,M,3,"0,6315789474",,English & Spanish,Warlaumont,High,Y
-GAL_000225_periodic_non-native-NK.eaf,NA,2,"0,32","1,967032967",French,French,High,N
-e20200226_105144_013099random_native.eaf-LML.eaf,NA,"11,14508334",0,"1,972972973",French,French,High,N
-e20200220_153526_008232random_native.eaf-LML.eaf,NA,"11,44097051","0,3829787234","1,841927167",French,French,High,N
-e20200304_111401_013098random_native-LML.eaf,NA,"11,57247592","0,375","3,905278787",French,French,High,N
-e20200226_121334_009458random_native-LML.eaf,NA,"11,70398133","0,303030303","1,946666667",French,French,High,N
-e20200302_155025_008232random_native-LML.eaf,NA,"11,70398133","0,1060606061","1,931805783",French,French,High,N
-CUM_010714_periodic_non-native-NK.eaf,NA,12,"0,416666667","3,863076",French,French,High,N
-DUN_020920_periodic_non-native-NK.eaf,NA,24,"0,765625","4,879352227",French,French,High,N
-COF_030503_periodic_non-native-NK.eaf,NA,36,"0,802469136","2,867924528",French,French,High,N
-01_CW02_CH02_FB03_FB25_190622_periodic_non-native-NK.eaf,F,12,"0,063492063","8,359505772",Marco language,Solomon,Low,Y
-01_CW04_CH04_FB04_FB34_190625_periodic_non-native-NM.eaf,M,12,"0,344827586","3,402123016",Marovo,Solomon,Low,Y
-01_CW01_CH01_FB04_FB24_190625_periodic_non-native-NK.eaf,M,24,"0,853333333","4,714244186",Marovo,Solomon,Low,Y
+GAL_000225_periodic_non-native-NK.eaf,NA,2,"0,32","0,9727272727",French,French,High,N
+e20200226_105144_013099random_native.eaf-LML.eaf,NA,"11,14508334",0,"0,9811320755",French,French,High,N
+e20200220_153526_008232random_native.eaf-LML.eaf,NA,"11,44097051","0,3829787234","0,9333333333",French,French,High,N
+e20200304_111401_013098random_native-LML.eaf,NA,"11,57247592","0,375","0,9705882353",French,French,High,N
+e20200226_121334_009458random_native-LML.eaf,NA,"11,70398133","0,303030303","0,975",French,French,High,N
+e20200302_155025_008232random_native-LML.eaf,NA,"11,70398133","0,1060606061","0,968",French,French,High,N
+CUM_010714_periodic_non-native-NK.eaf,NA,12,"0,416666667","0,958677686",French,French,High,N
+DUN_020920_periodic_non-native-NK.eaf,NA,24,"0,765625","0,9763779528",French,French,High,N
+COF_030503_periodic_non-native-NK.eaf,NA,36,"0,802469136","0,8923076923",French,French,High,N
+01_CW02_CH02_FB03_FB25_190622_periodic_non-native-NK.eaf,F,12,"0,063492063","0,8918918919",Marco language,Solomon,Low,Y
+01_CW04_CH04_FB04_FB34_190625_periodic_non-native-NM.eaf,M,12,"0,344827586","0,8790697674",Marovo,Solomon,Low,Y
+01_CW01_CH01_FB04_FB24_190625_periodic_non-native-NK.eaf,M,24,"0,853333333","0,9652173913",Marovo,Solomon,Low,Y
 114Cychosz,M,22,"0,4102564103",,Quechua,Cychosz,Moderate,Y
 105Cychosz,M,23,"0,5866666667",,Quechua,Cychosz,Moderate,Y
 117Cychosz,M,25,"0,484375",,Quechua,Cychosz,Moderate,Y
 01_CW03_CH03_LM04_LM34_190622_1_periodic_non-native-NM/BC.eaf,M,18,"0,472838",,Roviana,Solomon,Low,Y
-01_CW04_CH04_LM07_LM31_190708_1_periodic_non-native-NM.eaf,F,21,"0,3414634146","2,763398693",Roviana,Solomon,Low,Y
-01_CW04_CH04_FB08_FB23_190719_periodic_non-native-NK.eaf,F,24,"0,5986842105","5,788888889",Roviana,Solomon,Low,Y
-01_CW05_CH05_FB10_FB30_190729_1_periodic_non-native-NM.eaf,F,36,"0,7875","2,717395926",Roviana,Solomon,Low,Y
-01_CW02_CH02_FB13_FB31_190811_periodic_non-native-NM.eaf,M,48,"0,5744680851","3,568259264",Roviana,Solomon,Low,Y
-1_CW5_CH5_AJ14_AJ06_190727_periodic_non-native-NK.eaf,F,8,"0,4","5,634475027",Senga,Solomon,Low,Y
-1_CW2_CH2_AJ15_AJ09_190731_periodic_non-native-BC.eaf,M,18,"0,4615384615","3,908963585",Senga,Solomon,Low,Y
+01_CW04_CH04_LM07_LM31_190708_1_periodic_non-native-NM.eaf,F,21,"0,3414634146","0,9493670886",Roviana,Solomon,Low,Y
+01_CW04_CH04_FB08_FB23_190719_periodic_non-native-NK.eaf,F,24,"0,5986842105","0,9338842975",Roviana,Solomon,Low,Y
+01_CW05_CH05_FB10_FB30_190729_1_periodic_non-native-NM.eaf,F,36,"0,7875","0,9421487603",Roviana,Solomon,Low,Y
+01_CW02_CH02_FB13_FB31_190811_periodic_non-native-NM.eaf,M,48,"0,5744680851","0,9461077844",Roviana,Solomon,Low,Y
+1_CW5_CH5_AJ14_AJ06_190727_periodic_non-native-NK.eaf,F,8,"0,4","0,9346405229",Senga,Solomon,Low,Y
+1_CW2_CH2_AJ15_AJ09_190731_periodic_non-native-BC.eaf,M,18,"0,4615384615","0,9590163934",Senga,Solomon,Low,Y
 0643Tseltal,M,2,"0,03846153846",,Tseltal,Tseltal,High,Y
 7176Tseltal,M,4,"0,1558441558",,Tseltal,Tseltal,High,Y
 8179Tseltal,F,6,"0,08108108108",,Tseltal,Tseltal,High,Y
@@ -65,11 +65,11 @@ COF_030503_periodic_non-native-NK.eaf,NA,36,"0,802469136","2,867924528",French,F
 10Tsimane,M,30,"0,34375",,Tsimane,Tsimane,Moderate,Y
 2Tsimane,F,32,"0,4646464646",,Tsimane,Tsimane,Moderate,Y
 3Tsimane,M,32,"0,2282608696",,Tsimane,Tsimane,Moderate,Y
-01_CW06_CH06_FB11_FB34_190802_periodic_non-native-NM,F,12,"0,403226","3,796296296",Ughele,Solomon,Low,Y
-1_CW3_CH3_AJ18_AJ13_190811_periodic_non-native-NK.eaf,F,16,"0,328571429","4,797607656",Vaghua,Solomon,Low,Y
-1_CW3_CH3_AJ04_AJ10_190620_periodic_non-native-NK.eaf,M,18,"0,4571428571","8,835714286",Varisi,Solomon,Low,Y
-1_CW1_CH1_AJ17_AJ06_190807_1_periodic_non-native-NM.eaf,F,24,"0,409395973","1,717916815",Varisi,Solomon,Low,Y
-1_CW2_CH2_AJ17_AJ02_190807_periodic_non-native-NK.eaf,M,26,"0,6240601504","7,22650209",Varisi,Solomon,Low,Y
+01_CW06_CH06_FB11_FB34_190802_periodic_non-native-NM,F,12,"0,403226","0,949153",Ughele,Solomon,Low,Y
+1_CW3_CH3_AJ18_AJ13_190811_periodic_non-native-NK.eaf,F,16,"0,328571429","0,9234693878",Vaghua,Solomon,Low,Y
+1_CW3_CH3_AJ04_AJ10_190620_periodic_non-native-NK.eaf,M,18,"0,4571428571","0,9444444444",Varisi,Solomon,Low,Y
+1_CW1_CH1_AJ17_AJ06_190807_1_periodic_non-native-NM.eaf,F,24,"0,409395973","0,8451612903",Varisi,Solomon,Low,Y
+1_CW2_CH2_AJ17_AJ02_190807_periodic_non-native-NK.eaf,M,26,"0,6240601504","0,9166666667",Varisi,Solomon,Low,Y
 F07Casillas-Yeli,F,1,"0,05882352941",,Yélî,Casillas-Yeli,Low,N
 F28Casillas-Yeli,M,4,"0,1",,Yélî,Casillas-Yeli,Low,N
 F32Casillas-Yeli,M,4,"0,1948051948",,Yélî,Casillas-Yeli,Low,N
