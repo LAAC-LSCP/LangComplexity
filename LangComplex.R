@@ -47,7 +47,12 @@ hist(data.sub$CR[data.sub$SylComp=="Low"],main="Low Syllable Complexity",xlab="C
 hist(data.sub$CR[data.sub$SylComp=="Moderate"],main="Moderate Syllable Complexity",xlab="CR")  #less good, quite flat
 hist(data.sub$CR[data.sub$SylComp=="High"],main="High Syllable Complexity",xlab="CR") #idem
 
-# plot data
+# plots
+ggplot(data.sub,aes(x=CR,fill=SylComp))+
+  geom_histogram(bins=20,color="black") +  
+  facet_grid(.~SylComp)  
+
+
 ggplot(data.sub, aes(x=Age, y=CR, color=Language)) +
   geom_point()+
 # Add regression lines

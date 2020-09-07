@@ -4,7 +4,7 @@ library(gvlma)
 library(car)
 library(RCurl)
 
-docloc='https://docs.google.com/spreadsheets/d/e/2PACX-1vTpwFN2RIwjRNkbYe2gjW4gO4DReKSnSQIL2x_RjQYtE-qtA9aUXegDqdehdKzkfA/pub?output=csv'
+docloc='https://docs.google.com/spreadsheets/d/e/2PACX-1vSzvJcT6yT9_fpRoFg5O7LAput7VKKltSxAuGMyC5wDlo_75D9ELA8YaVeMIVwcLw/pub?output=csv'
 myfile <- getURL(docloc, ssl.verifyhost=FALSE, ssl.verifypeer=FALSE)
 all_data<- read.csv(textConnection(myfile), header=T)
 
@@ -12,7 +12,7 @@ all_data<- read.csv(textConnection(myfile), header=T)
 # https://docs.google.com/spreadsheets/d/1rhpTqgpv9VgsZOtoEHqxwShYrZIsbiB_/edit#gid=1860768761
 
 #an error can be solved by using ";" or "," as a separator
-all_data<- read.csv("./Data/First_trial.xlsx - MAIN.csv", header=T,sep=",")
+all_data<- read.csv("./Data/CR_by_child.csv", header=T,sep=",")
 
 summary(all_data)
 dim(all_data)
@@ -30,8 +30,8 @@ data.sub$Age2=data.sub$Age^2 #generate squared component
 data.sub$Age3=data.sub$Age^3 #generate cubic component
 
 data.sub<-subset(data.sub, !is.na(SylComp)) #exclude NA
-data.sub<-subset(data.sub, !is.na(C_count)) #exclude NA
-data.sub<-subset(data.sub, !is.na(V_count)) #exclude NA
+data.sub<-subset(data.sub, !is.na(C_count)) #exclude NA in Consonants
+data.sub<-subset(data.sub, !is.na(V_count)) #exclude NA Vowels
 
 # add more information
 data.sub$coding<-ifelse(data.sub$corpus %in% c("Solomon","French"),"lab","citsci")
@@ -39,83 +39,147 @@ data.sub$coding<-ifelse(data.sub$corpus %in% c("Solomon","French"),"lab","citsci
 # describe data
 table(data.sub$corpus)
 table(data.sub$Language) #shows N kids per language
-table(data.sub$SylComp,data.sub$Language)  #notice that all the moderate data comes from Tsimane
-table(data.sub$SylComp,data.sub$C_count) 
-table(data.sub$SylComp,data.sub$V_count) 
-table(data.sub$Language,data.sub$C_count,data.sub$SylComp)
-table(data.sub$Language,data.sub$V_count,data.sub$SylComp)
-
+table(data.sub$C_count,data.sub$Language) #Consonants
+table(data.sub$V_count,data.sub$Language) #Vowels
+#just one more way of representing data
+table(data.sub$Language,data.sub$C_count,data.sub$SylComp) #Consonants
+table(data.sub$Language,data.sub$V_count,data.sub$SylComp) #Vowels
 
 #histograms
 hist(data.sub$CR,main="CR",xlab="CR") #quite normally distributed
-hist(data.sub$CR[data.sub$SylComp=="Low"],main="Low Syllable Complexity",xlab="CR") #looks ok
-hist(data.sub$CR[data.sub$SylComp=="Moderate"],main="Moderate Syllable Complexity",xlab="CR")  #less good, quite flat
-hist(data.sub$CR[data.sub$SylComp=="High"],main="High Syllable Complexity",xlab="CR") #idem
+hist(data.sub$CR[data.sub$C_count],main="Consonant number and CR",xlab="CR") #Consonants
+hist(data.sub$CR[data.sub$V_count],main="Consonant number and CR",xlab="CR") #Vowels
 
-# plot data
+#plots
+#dunno if the first two can be useful
+ggplot(data.sub,aes(x=CR,fill=C_count))+      #Consonants
+  geom_histogram(bins=20,color="black") + 
+  facet_grid(.~C_count)  
+
+ggplot(data.sub,aes(x=CR,fill=V_count))+      #Vowels
+  geom_histogram(bins=20,color="black") + 
+  facet_grid(.~V_count) 
+
+
 ggplot(data.sub, aes(x=Age, y=CR, color=Language)) +
   geom_point()+
   # Add regression lines
   geom_smooth(method=lm,se=FALSE)
 
 
-# Fit most complex model
-mod_complex=lm(CR~Age*C_count+Age2*C_count+Age3*C_count,data=data.sub)
+# Fit most complex models
+mod_complexC=lm(CR~Age*C_count+Age2*C_count+Age3*C_count,data=data.sub) #Consonants
+mod_complexV=lm(CR~Age*V_count+Age2*V_count+Age3*V_count,data=data.sub) #Vowels
+
 
 #check for assumptions
-plot(mod_complex) #looks pretty ok
-gvlma(mod_complex) #assumptions met
+#Consonants
+plot(mod_complexC) 
+gvlma(mod_complexC)
+#Vowels
+plot(mod_complexV) 
+gvlma(mod_complexV)
+
 
 #compare to simpler model
-mod_simple=lm(CR~Age+SylComp,data=data.sub)
-anova(mod_complex,mod_simple) 
-# the more complex model explains sig more variance, despite added model complexity
+#Consonants
+mod_simpleC=lm(CR~Age+C_count,data=data.sub)
+anova(mod_complexC,mod_simpleC) 
+#Vowels
+mod_simpleV=lm(CR~Age+V_count,data=data.sub)
+anova(mod_complexV,mod_simpleV) 
+
 
 # check whether it's simply due to age polynomials
 mod_age=lm(CR~Age+Age2+Age3,data=data.sub)
-anova(mod_complex,mod_age) #no, model with interaction terms is much better than even the one with polynomials
+anova(mod_complexC,mod_age) #Consonants  
+anova(mod_complexV,mod_age) #Vowels
+
 
 # check whether it's the interaction
-mod_int=lm(CR~Age*SylComp,data=data.sub)
-anova(mod_complex,mod_int) 
+#Consonants  
+mod_intC=lm(CR~Age*C_count,data=data.sub)
+anova(mod_complexC,mod_intC) 
+#Vowels
+mod_intV=lm(CR~Age*V_count,data=data.sub)
+anova(mod_complexV,mod_intV) 
 #NOTE! This changed with more data
 # I first thought it seems so, because the more complex model is only marginally better than this simpler one, with interaction
 #but now the more complex model is sig better than this simpler one
 
+
 # add back polynomials but without interaction
-mod_int_age=lm(CR~Age*SylComp+Age2+Age3,data=data.sub)
-anova(mod_complex,mod_int_age) 
+#Consonants 
+mod_int_ageC=lm(CR~Age*C_count+Age2+Age3,data=data.sub)
+anova(mod_complexC,mod_int_ageC) 
+#Vowels
+mod_int_ageV=lm(CR~Age*V_count+Age2+Age3,data=data.sub)
+anova(mod_complexV,mod_int_ageV) 
 #NOTE: this also changed with more data
 # originally I thought model with interactions on all the polyn terms is no better
 # but now it is
 
-mod_int_age2=lm(CR~Age*SylComp+Age2,data=data.sub)
-anova(mod_int_age,mod_int_age2) #and age cube doesn't add anything either
+#Consonants 
+mod_int_ageC2=lm(CR~Age*C_count+Age2,data=data.sub)
+anova(mod_int_ageC,mod_int_ageC2) #and age cube doesn't add anything either
+#Vowels
+mod_int_ageV2=lm(CR~Age*V_count+Age2,data=data.sub)
+anova(mod_int_ageV,mod_int_ageV2)
 #this hasn't changed-- age cube didn't help
 
-mod_int_age2_int=lm(CR~Age*SylComp+Age2*SylComp,data=data.sub)
-anova(mod_complex,mod_int_age2_int) #ah note that the interaction age3*sylcomp wasn't adding anything
+#Consonants 
+mod_int_age2_intC=lm(CR~Age*C_count+Age2*C_count,data=data.sub)
+anova(mod_complexC,mod_int_age2_intC) #ah note that the interaction age3*sylcomp wasn't adding anything
+#Vowels
+mod_int_age2_intV=lm(CR~Age*V_count+Age2*V_count,data=data.sub)
+anova(mod_complexV,mod_int_age2_intV)
 
 
 #check for assumptions in this new winning model
-plot(mod_int_age2_int) #looks ok
-gvlma(mod_int_age2_int) #passes all checks
+#Consonants 
+plot(mod_int_age2_intC) 
+gvlma(mod_int_age2_intC)  
+#Vowels
+plot(mod_int_age2_intV) 
+gvlma(mod_int_age2_intV)  
+
 
 # So look at what it says
-Anova(mod_int_age2_int, type="III") 
-summary(mod_int_age2_int) 
-#main effect of age, ag2, sylcomp, interaction age*sylcom and age2*sylcom!
+#Consonants 
+Anova(mod_int_age2_intC, type="III") 
+summary(mod_int_age2_intC) 
+#Vowels
+Anova(mod_int_age2_intV, type="III") 
+summary(mod_int_age2_intV) 
 
-mod_int_age_noTsi=lm(CR~Age*SylComp+Age2*SylComp,data=data.sub,subset=c(corpus!="Tsimane"))
-plot(mod_int_age_noTsi) #looks ok
-gvlma(mod_int_age_noTsi) #passes all checks
+#Consonants 
+mod_int_age_noTsiC=lm(CR~Age*C_count+Age2*C_count,data=data.sub,subset=c(corpus!="Tsimane"))
+plot(mod_int_age_noTsiC)  
+gvlma(mod_int_age_noTsiC)   
+#Vowels
+mod_int_age_noTsiV=lm(CR~Age*V_count+Age2*V_count,data=data.sub,subset=c(corpus!="Tsimane"))
+plot(mod_int_age_noTsiV)  
+gvlma(mod_int_age_noTsiV)   
 
-Anova(mod_int_age_noTsi, type="III")
-summary(mod_int_age_noTsi)
+#Consonants 
+Anova(mod_int_age_noTsiC, type="III")
+summary(mod_int_age_noTsiC)
+#Vowels
+Anova(mod_int_age_noTsiV, type="III")
+summary(mod_int_age_noTsiV)
 #results are not driven by Tsimane 
 
 # plot data
-ggplot(data.sub, aes(x=Age, y=CR, color=SylComp)) +
+#Consonants 
+ggplot(data.sub, aes(x=Age, y=CR, color=C_count)) +
+  geom_point()+
+  # Add regression lines
+  # geom_smooth(method=lm)+
+  # Add loess lines
+  geom_smooth(span = 0.8)
+
+#Vowels
+ggplot(data.sub, aes(x=Age, y=CR, color=V_count)) +
   geom_point()+
   # Add regression lines
   # geom_smooth(method=lm)+
@@ -129,25 +193,52 @@ data.sub$Age2.s=scale(data.sub$Age2)
 data.sub$Age3.s=scale(data.sub$Age3) 
 
 # better control for ages...
-mod_int_age_noTsi_ageScaled=lm(CR~Age.s*SylComp+Age2.s*SylComp,data=data.sub,subset=c(corpus!="Tsimane"))
-plot(mod_int_age_noTsi_ageScaled) #looks ok
-gvlma(mod_int_age_noTsi_ageScaled) #checks ok
-Anova(mod_int_age_noTsi_ageScaled, type="III") 
-summary(mod_int_age_noTsi_ageScaled)
-# now we have effect of syllable complexity
+#Consonants 
+mod_int_age_noTsi_ageScaledC=lm(CR~Age.s*C_count+Age2.s*C_count,data=data.sub,subset=c(corpus!="Tsimane"))
+plot(mod_int_age_noTsi_ageScaledC)  
+gvlma(mod_int_age_noTsi_ageScaledC)  
+Anova(mod_int_age_noTsi_ageScaledC, type="III") 
+summary(mod_int_age_noTsi_ageScaledC)
+
+#Vowels
+mod_int_age_noTsi_ageScaledV=lm(CR~Age.s*V_count+Age2.s*V_count,data=data.sub,subset=c(corpus!="Tsimane"))
+plot(mod_int_age_noTsi_ageScaledV)  
+gvlma(mod_int_age_noTsi_ageScaledV)  
+Anova(mod_int_age_noTsi_ageScaledV, type="III") 
+summary(mod_int_age_noTsi_ageScaledV)
+
 
 # check that this is not just driven by Yeli old kids
-mod_int_age_noTsi_ageScaled_no_old=lm(CR~Age.s*SylComp+Age2.s*SylComp,data=data.sub,
+#Consonants 
+mod_int_age_noTsi_ageScaled_no_oldC=lm(CR~Age.s*C_count+Age2.s*C_count,data=data.sub,
                                       subset=c(corpus!="Tsimane"&Age<40))
-plot(mod_int_age_noTsi_ageScaled_no_old) #looks ok
-gvlma(mod_int_age_noTsi_ageScaled_no_old) #checks ok
-Anova(mod_int_age_noTsi_ageScaled_no_old, type="III") 
-summary(mod_int_age_noTsi_ageScaled_no_old)
+plot(mod_int_age_noTsi_ageScaled_no_oldC) #looks ok
+gvlma(mod_int_age_noTsi_ageScaled_no_oldC) #checks ok
+Anova(mod_int_age_noTsi_ageScaled_no_oldC, type="III") 
+summary(mod_int_age_noTsi_ageScaled_no_oldC)
+
+#Vowels
+mod_int_age_noTsi_ageScaled_no_oldV=lm(CR~Age.s*V_count+Age2.s*V_count,data=data.sub,
+                                       subset=c(corpus!="Tsimane"&Age<40))
+plot(mod_int_age_noTsi_ageScaled_no_oldV) #looks ok
+gvlma(mod_int_age_noTsi_ageScaled_no_oldV) #checks ok
+Anova(mod_int_age_noTsi_ageScaled_no_oldV, type="III") 
+summary(mod_int_age_noTsi_ageScaled_no_oldV)
 
 #replot without kids over 40
 data.sub_under40=subset(data.sub, Age<40 & corpus!="Warlaumont")
+
 # plot data
-ggplot(data.sub_under40, aes(x=Age, y=CR, color=SylComp)) +
+#Consonants 
+ggplot(data.sub_under40, aes(x=Age, y=CR, color=C_count)) +
+  geom_point()+
+  # Add regression lines
+  # geom_smooth(method=lm)+
+  # Add loess lines
+  geom_smooth(span = 0.8)
+
+#Vowels
+ggplot(data.sub_under40, aes(x=Age, y=CR, color=V_count)) +
   geom_point()+
   # Add regression lines
   # geom_smooth(method=lm)+
