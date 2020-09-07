@@ -11,7 +11,7 @@ all_data<- read.csv(textConnection(myfile), header=T)
 # if there is a new version of the data file, get it from here: 
 # https://docs.google.com/spreadsheets/d/1rhpTqgpv9VgsZOtoEHqxwShYrZIsbiB_/edit#gid=1860768761
 
-#an error can be solved by using ";" as a separator
+#an error can be solved by using ";" or "," as a separator
 all_data<- read.csv("./Data/CR_by_child-updated_3_08.xlsx - MAIN.csv", header=T,sep=";")
 
 summary(all_data)

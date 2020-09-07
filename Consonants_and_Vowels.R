@@ -4,34 +4,18 @@ library(gvlma)
 library(car)
 library(RCurl)
 
-#Importing data from the CR_by_child file
-docloc='https://docs.google.com/spreadsheets/d/e/2PACX-1vSzvJcT6yT9_fpRoFg5O7LAput7VKKltSxAuGMyC5wDlo_75D9ELA8YaVeMIVwcLw/pub?gid=1294110857&single=true&output=csv'
+docloc='https://docs.google.com/spreadsheets/d/e/2PACX-1vTpwFN2RIwjRNkbYe2gjW4gO4DReKSnSQIL2x_RjQYtE-qtA9aUXegDqdehdKzkfA/pub?output=csv'
 myfile <- getURL(docloc, ssl.verifyhost=FALSE, ssl.verifypeer=FALSE)
 all_data<- read.csv(textConnection(myfile), header=T)
 
+# if there is a new version of the data file, get it from here: 
+# https://docs.google.com/spreadsheets/d/1rhpTqgpv9VgsZOtoEHqxwShYrZIsbiB_/edit#gid=1860768761
+
 #an error can be solved by using ";" or "," as a separator
-all_data<- read.csv("./Data/CR_by_child.csv", header=T,sep=",")
-
-#Importing data from the Languages file
-docloc='https://docs.google.com/spreadsheets/d/e/2PACX-1vQn5BpGr0eAcfpuf0F-No0_pJ9QgVk4i79ryOS4OI53kw7waB-OuBLMozF1hiFdNQ/pub?output=csv'   
-myfile2 <- getURL(docloc, ssl.verifyhost=FALSE, ssl.verifypeer=FALSE)
-all_data2<- read.csv(textConnection(myfile2), header=T)
-
-#adding a file with Languages file
-lang_data<- read.csv("./Data/LAAC_Internship2020_Languages.csv", header=T,sep=",")
-
-
-#select the columns to merge from the Languages file
-lang_sub<-lang_data %>% select(Language, C_count, Maddieson_C_inv, V_count, VQ, Maddieson_VQ_Inv, C.V, C.VQ, C.VQ.1, Maddieson_C.VQ)
-
-
-#merge the selected columns into one dataset
-all_data<-merge(cr_data,lang_sub, by="Language")
-
+all_data<- read.csv("./Data/First_trial.xlsx - MAIN.csv", header=T,sep=",")
 
 summary(all_data)
 dim(all_data)
-
 
 # apply exclusions
 #data.sub <- subset(all_data,  Age_in_months<=50)
@@ -40,12 +24,14 @@ all_data->data.sub
 
 #correct some data issues
 data.sub$CR=as.numeric(gsub(",",".",data.sub$CR))
-bdata.sub$Age=as.numeric(gsub(",",".",data.sub$Age.in.months))
+data.sub$SylComp=factor(data.sub$Syllable.complexity,levels=c("Low","Moderate","High"))
+data.sub$Age=as.numeric(gsub(",",".",data.sub$Age.in.months))
 data.sub$Age2=data.sub$Age^2 #generate squared component
 data.sub$Age3=data.sub$Age^3 #generate cubic component
 
-data.sub<-subset(data.sub, !is.na(SylComp))
-
+data.sub<-subset(data.sub, !is.na(SylComp)) #exclude NA
+data.sub<-subset(data.sub, !is.na(C_count)) #exclude NA
+data.sub<-subset(data.sub, !is.na(V_count)) #exclude NA
 
 # add more information
 data.sub$coding<-ifelse(data.sub$corpus %in% c("Solomon","French"),"lab","citsci")
@@ -54,6 +40,11 @@ data.sub$coding<-ifelse(data.sub$corpus %in% c("Solomon","French"),"lab","citsci
 table(data.sub$corpus)
 table(data.sub$Language) #shows N kids per language
 table(data.sub$SylComp,data.sub$Language)  #notice that all the moderate data comes from Tsimane
+table(data.sub$SylComp,data.sub$C_count) 
+table(data.sub$SylComp,data.sub$V_count) 
+table(data.sub$Language,data.sub$C_count,data.sub$SylComp)
+table(data.sub$Language,data.sub$V_count,data.sub$SylComp)
+
 
 #histograms
 hist(data.sub$CR,main="CR",xlab="CR") #quite normally distributed
@@ -64,7 +55,7 @@ hist(data.sub$CR[data.sub$SylComp=="High"],main="High Syllable Complexity",xlab=
 # plot data
 ggplot(data.sub, aes(x=Age, y=CR, color=Language)) +
   geom_point()+
-# Add regression lines
+  # Add regression lines
   geom_smooth(method=lm,se=FALSE)
 
 
@@ -127,7 +118,7 @@ summary(mod_int_age_noTsi)
 ggplot(data.sub, aes(x=Age, y=CR, color=SylComp)) +
   geom_point()+
   # Add regression lines
- # geom_smooth(method=lm)+
+  # geom_smooth(method=lm)+
   # Add loess lines
   geom_smooth(span = 0.8)
 

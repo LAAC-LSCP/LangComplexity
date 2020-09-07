@@ -1,21 +1,27 @@
-﻿Language;Location;C_count;Maddieson_C_inv;V_count;VQ;Maddieson_VQ_Inv;C+V;C+VQ;C/VQ;Maddieson_C/VQ;Dip_count;Maddieson_sylcomp;Wiki_sylcomp;Other_sylcomp
-English;Multiple;24;Average;13;13;Large;37;37;1,8462;Low;7;High; (C)3V(C)5;(C)(C)V(C)(C) (,)         (C)(C)(C)V(C)(C)(C)(C)
-JU’|HOAN;Namibia, Botswana;56;Large;30;5;Average;86;61;11;High;many;Low;"""Only a small set of consonants occur between vowels within roots""";NA
-Yélî Dnye;Rossel Island, Papua New Guinea;56;Large;38;10;Large;94;66;5,6;Moderately high;NA;Low;(C)V ;(C)V 
-Tseltal;Mexico;25;Average;5;5;Average;30;30;5;Moderately high;NA;High;CVC or CVhC;CVC
-Quechua;Peru, Bolivia, Ecuador;26;Moderately large;5;5;Average;31;31;5,2;Moderately high;NA;Moderate;CV(C) (about South-Bolivian Quechua);CV(C)        Mostly CV 
-Tsimane;Bolivia;24;Average;18;5;Average;42;29;4,8;Moderately high;NA;Moderate;NA;(C)V(C)(ʔ)
-French;Multiple;21;Average;17;12;Large;38;33;1,75;Low;NA;High;NA;Mostly CV
-Roviana;Western Province, Solomons;16;Moderately Small;5;5;Average;21;21;3,2;Average;5;Low;NA;(C)V
-Ughele;Western Province, Solomons;18;Moderately Small;5;5;Average;23;23;3,6;Average;7;Low;NA;(C)V consonant clusters in a few cases (see word doc for details)
-Simbo;Western Province, Solomons;NA;NA;NA;NA;NA;NA;NA;NA;NA;NA;Low;NA;(C)V
-Pidgin;Western Province, Solomons;17;Moderately Small;5;5;Average;22;22;3,4;Average;3;Low;NA;(C)V
-Marovo;Western Province, Solomons;NA;NA;NA;NA;NA;NA;NA;NA;NA;NA;Low;NA;(C)V
-Avasö;Choiseul Island, Solomons;NA;NA;NA;NA;NA;NA;NA;NA;NA;NA;Low;NA;(C)V
-Babatana;Choiseul Island, Solomons;17;Moderately Small;5;5;Average;22;22;3,4;Average;2;Low;NA;(C)V
-Varisi;Choiseul Island, Solomons;NA;NA;NA;NA;NA;NA;NA;NA;NA;NA;Low;NA;(C)V
-Vaghua;Choiseul Island, Solomons;NA;NA;NA;NA;NA;NA;NA;NA;NA;NA;Low;NA;(C)V
-Sisiqa Senga Sisinga;Choiseul Island, Solomons;16;Moderately Small;6;6;Average;22;22;2,6667;Moderately low;NA;Low;NA;(C)V
-Babaka;Choiseul Island, Solomons;NA;NA;NA;NA;NA;NA;NA;NA;NA;NA;Low;NA;(C)V
-Vavarisi;Choiseul Island, Solomons;NA;NA;NA;NA;NA;NA;NA;NA;NA;NA;Low;NA;(C)V
-Marco language;Western Province, Solomons;NA;NA;NA;NA;NA;NA;NA;NA;NA;NA;Low;NA;(C)V
+Language,Location,C_count,Maddieson_C_inv,V_count,VQ,Maddieson_VQ_Inv,C+V,C+VQ,C/VQ,Maddieson_C/VQ,Dip_count,Maddieson_sylcomp,Wiki_sylcomp,Other_sylcomp
+English,Multiple,24,Average,13,13,Large,37,37,"1,8462",Low,7,High, (C)3V(C)5,"(C)(C)V(C)(C) (,)         (C)(C)(C)V(C)(C)(C)(C)"
+JU’|HOAN,"Namibia, Botswana",56,Large,30,5,Average,86,61,11,High,many,Low,"""Only a small set of consonants occur between vowels within roots""",NA
+Yélî Dnye,"Rossel Island, Papua New Guinea",56,Large,38,10,Large,94,66,"5,6",Moderately high,NA,Low,(C)V ,(C)V  (C)V(ː)	
+Tseltal,Mexico,25,Average,5,5,Average,30,30,5,Moderately high,NA,High,CVC or CVhC,CVC        (C)(C)V(h)(C)	
+Quechua,"Peru, Bolivia, Ecuador",26,Moderately large,5,5,Average,31,31,"5,2",Moderately high,NA,Moderate,CV(C) (about South-Bolivian Quechua),CV(C)        Mostly CV 
+Tsimane,Bolivia,24,Average,18,5,Average,42,29,"4,8",Moderately high,NA,Moderate,NA,(C)V(C)(ʔ)
+French,Multiple,21,Average,17,12,Large,38,33,"1,75",Low,NA,High,NA,(C)(C)(C)V(C)(C)(C)   Mostly CV
+Bislama,Vanuatu,17,Moderately Small,5,5,Average,22,22,"3,4",Average,2-4,,NA,
+Dutch,Multiple,18,Moderately Small,16,13,Large,34,31,"1,384615385",Low,3,High,NA,(C)(C)(C)V(V)(C)(C)(C)(C)
+Finnish,"Finland, western regions of Russia",17,Moderately Small,16,8,Large,33,25,"2,125",Moderately low,18,Moderate,CVC,(C)V(C)
+Swedish,"Sweden, Finland",18,Moderately Small,17,16,Large,35,34,"1,125",Low,NA,High,(C)(C)(C)V(C)(C)(C),(C)(C)(C)V(C)(C)(C)
+Norwegian,Norway,22,Average,24,10,Large,46,32,"2,2",Moderately low,5,High,NA,(C)(C)(C)V(ː)(C)(C)(C(C)
+Wolof,"Senegal, Gambia, Mauritania",24,Average,15,8,Large,39,32,3,Average,NA,High,NA,(C)V(C)(C)
+Roviana,"Western Province, Solomons",16,Moderately Small,5,5,Average,21,21,"3,2",Average,5,Low,NA,(C)V
+Ughele,"Western Province, Solomons",18,Moderately Small,5,5,Average,23,23,"3,6",Average,7,Low,NA,(C)V consonant clusters in a few cases (see word doc for details)
+Simbo,"Western Province, Solomons",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,Low,NA,(C)V
+Pidgin,"Western Province, Solomons",17,Moderately Small,5,5,Average,22,22,"3,4",Average,3,Low,NA,(C)V
+Marovo,"Western Province, Solomons",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,Low,NA,(C)V
+Avasö,"Choiseul Island, Solomons",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,Low,NA,(C)V
+Babatana,"Choiseul Island, Solomons",17,Moderately Small,5,5,Average,22,22,"3,4",Average,2,Low,NA,(C)V
+Varisi,"Choiseul Island, Solomons",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,Low,NA,(C)V
+Vaghua,"Choiseul Island, Solomons",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,Low,NA,(C)V
+Sisiqa Senga Sisinga,"Choiseul Island, Solomons",16,Moderately Small,6,6,Average,22,22,"2,6667",Moderately low,NA,Low,NA,(C)V
+Babaka,"Choiseul Island, Solomons",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,Low,NA,(C)V
+Vavarisi,"Choiseul Island, Solomons",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,Low,NA,(C)V
+Marco language,"Western Province, Solomons",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,Low,NA,(C)V
