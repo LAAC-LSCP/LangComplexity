@@ -218,3 +218,19 @@ ggplot(adult_data, aes(x=Maddieson_C_VQ, y=CR.Adults, color=Maddieson_C_VQ)) +
   ggtitle("Adult CR against the ratio of consonant to vowel qualities inventory size") +
   xlab("")
 
+
+
+
+# Adult CR-age+sylcomp lm
+
+mod_complex=lm(CR.Adults~Age*Syllable.complexity+Age2*Syllable.complexity+Age3*Syllable.complexity,data=adult_data)
+
+#check for assumptions
+plot(mod_complex) #looks pretty ok
+gvlma(mod_complex) #assumptions met
+
+# subset only low/high 
+
+#compare to simpler model
+mod_simple=lm(CR.Adults~Syllable.complexity,data=adult_data)
+anova(mod_simple,mod_complex) 
