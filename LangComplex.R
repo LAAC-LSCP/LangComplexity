@@ -68,7 +68,7 @@ gvlma(mod_complex) #assumptions met
 
 #compare to simpler model
 mod_simple=lm(CR~Age+SylComp,data=data.sub)
-anova(mod_complex,mod_simple) 
+anova(mod_simple,mod_complex) 
 # the more complex model explains sig more variance, despite added model complexity
 
 # check whether it's simply due to age polynomials

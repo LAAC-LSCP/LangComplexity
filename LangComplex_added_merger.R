@@ -10,7 +10,7 @@ myfile <- getURL(docloc, ssl.verifyhost=FALSE, ssl.verifypeer=FALSE)
 all_data<- read.csv(textConnection(myfile), header=T)
 
 #an error can be solved by using ";" or "," as a separator
-all_data<- read.csv("./Data/CR_by_child.csv", header=T,sep=",")
+all_data<- read.csv("./Data/CR_by_child.csv", header=T,sep=";")
 
 #Importing data from the Languages file
 docloc='https://docs.google.com/spreadsheets/d/e/2PACX-1vQn5BpGr0eAcfpuf0F-No0_pJ9QgVk4i79ryOS4OI53kw7waB-OuBLMozF1hiFdNQ/pub?output=csv'   

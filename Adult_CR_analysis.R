@@ -4,7 +4,7 @@ library(gvlma)
 library(car)
 library(RCurl)
 library(viridis)
-
+setwd("/Users/chiarasemenzin/Documents/GitHub/LangComplexity/")
 
 #IMPORTING & SELECTING DATA ----------------------------------------------------
 #CR_by_child file
@@ -37,6 +37,13 @@ dim(adult_data)
 adult_data$CR.Adults=as.numeric(gsub(",",".",adult_data$CR.Adults)) #convert the CR.Adult data to numeric format
 adult_data<-adult_data[!(is.na(adult_data$CR.Adults) | adult_data$CR.Adults==""), ] #delete the rows with no adult CR
 
+#correct some data issues
+adult_data$SylComp=factor(adult_data$Syllable.complexity,levels=c("Low","Moderate","High"))
+adult_data$Age2=adult_data$Age^2 #generate squared component
+adult_data$Age3=adult_data$Age^3 #generate cubic component
+
+adult_data<-subset(adult_data, !is.na(Syllable.complexity))
+
 #set the order of qualitative factors
 adult_data$SylComp <- ordered(adult_data$Maddieson_sylcomp, levels=c('Low', 'Moderate', 'High')) 
 adult_data$Maddieson_C <- ordered(adult_data$Maddieson_C_inv, levels=c('Small', 'Moderately Small', 'Average', 'Moderately Large', 'Large')) 
@@ -51,6 +58,7 @@ adult_data$VQ=as.numeric(gsub(",",".",adult_data$VQ))
 adult_data$C_VQ=as.numeric(gsub(",",".",adult_data$C.VQ.1))
 
 
+
 # TABLES -----------------------------------------------------------------------
 #tables
 table(adult_data$corpus) #shows N adults per corpus
@@ -61,6 +69,7 @@ table(adult_data$Language, adult_data$Maddieson_C_VQ, useNA = "ifany") #shows N 
 table(adult_data$Maddieson_C_VQ, adult_data$SylComp, useNA = "ifany") #shows N adults for C/VQ levels per syllable complexity
 
 # HISTOGRAMS -------------------------------------------------------------------
+# Slightly skewed to the right, but where is variation coming from?
 hist(adult_data$CR.Adults,main="CR Adults",xlab="CR Adults") 
 
 #SylComp
@@ -107,6 +116,24 @@ ggplot(adult_data, aes(x=Age, y=CR.Adults, color=SylComp)) +
   geom_point()+
   # Add regression lines
   geom_smooth(method=lm,se=FALSE)
+
+
+
+# Fit most complex model
+mod_complex=lm(CR.Adults~Age*Syllable.complexity+Age2*Syllable.complexity+Age3*Syllable.complexity,data=adult_data)
+
+#check for assumptions
+plot(mod_complex) #looks pretty ok
+gvlma(mod_complex) #assumptions met
+
+# subset only low/high 
+
+#compare to simpler model
+mod_simple=lm(CR.Adults~Syllable.complexity,data=adult_data)
+anova(mod_simple,mod_complex) 
+# the more complex model explains sig more variance, despite added model complexity
+
+
 
 # Violin plot by syllable complexity
 ggplot(adult_data, aes(x=SylComp, y=CR.Adults, color=SylComp)) +
