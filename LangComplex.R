@@ -161,3 +161,4 @@ ggplot(data.sub_under40, aes(x=Age, y=CR, color=SylComp)) +
 "Average CR for moderate syllable complexity"; mean(data.sub_under40$CR[data.sub_under40$SylComp == "Moderate"]) ; "Standard Deviation" ; sd(data.sub_under40$CR[data.sub_under40$SylComp == "Moderate"])
 "Average CR for high syllable complexity"; mean(data.sub_under40$CR[data.sub_under40$SylComp == "High"]) ; "Standard Deviation" ; sd(data.sub_under40$CR[data.sub_under40$SylComp == "High"])
 
+boxplot(data.sub_under40$CR~data.sub_under40$SylComp, main="Distribution of CP by syllable complexity", xlab="Syllable complexity", ylab="CP")
