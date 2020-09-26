@@ -153,3 +153,11 @@ ggplot(data.sub_under40, aes(x=Age, y=CR, color=SylComp)) +
   # geom_smooth(method=lm)+
   # Add loess lines
   geom_smooth(span = 0.8)
+
+#Mean CR and standard deviation
+"Average CR"; mean(data.sub_under40$CR) ; "Standard Deviation" ; sd(data.sub_under40$CR)
+
+"Average CR for low syllable complexity"; mean(data.sub_under40$CR[data.sub_under40$SylComp == "Low"]) ; "Standard Deviation" ; sd(data.sub_under40$CR[data.sub_under40$SylComp == "Low"])
+"Average CR for moderate syllable complexity"; mean(data.sub_under40$CR[data.sub_under40$SylComp == "Moderate"]) ; "Standard Deviation" ; sd(data.sub_under40$CR[data.sub_under40$SylComp == "Moderate"])
+"Average CR for high syllable complexity"; mean(data.sub_under40$CR[data.sub_under40$SylComp == "High"]) ; "Standard Deviation" ; sd(data.sub_under40$CR[data.sub_under40$SylComp == "High"])
+

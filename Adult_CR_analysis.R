@@ -68,6 +68,17 @@ table(adult_data$Maddieson_C,adult_data$Maddieson_VQ, useNA = "ifany") #shows N 
 table(adult_data$Language, adult_data$Maddieson_C_VQ, useNA = "ifany") #shows N adults for C/VQ levels
 table(adult_data$Maddieson_C_VQ, adult_data$SylComp, useNA = "ifany") #shows N adults for C/VQ levels per syllable complexity
 
+
+
+#Mean adult CR and standard deviation ------------------------------------------
+"Average adult CR"; mean(adult_data$CR.Adults) ; "Standard Deviation" ; sd(adult_data$CR.Adults)
+
+"Average CR for low syllable complexity"; mean(adult_data$CR.Adults[adult_data$SylComp == "Low"]) ; "Standard Deviation" ; sd(adult_data$CR.Adults[adult_data$SylComp == "Low"])
+"Average CR for moderate syllable complexity"; mean(adult_data$CR.Adults[adult_data$SylComp == "Moderate"]) ; "Standard Deviation" ; sd(adult_data$CR.Adults[adult_data$SylComp == "Moderate"])
+"Average CR for high syllable complexity"; mean(adult_data$CR.Adults[adult_data$SylComp == "High"]) ; "Standard Deviation" ; sd(adult_data$CR.Adults[adult_data$SylComp == "High"])
+
+
+
 # HISTOGRAMS -------------------------------------------------------------------
 # Slightly skewed to the right, but where is variation coming from?
 hist(adult_data$CR.Adults,main="CR Adults",xlab="CR Adults") 
