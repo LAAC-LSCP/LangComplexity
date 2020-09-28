@@ -116,6 +116,10 @@ summary(mod_int_age_noTsi)
 
 # plot data
 ggplot(data.sub, aes(x=Age, y=CR, color=SylComp)) +
+  labs(title = "Distribution of CP wrt. Age")+
+  labs(colour = "Syllable Complexity")+
+  labs(x = "Age (months)")+
+  labs(y = "CP")+
   geom_point()+
   # Add regression lines
  # geom_smooth(method=lm)+
