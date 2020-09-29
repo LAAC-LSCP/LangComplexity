@@ -3,6 +3,7 @@ library(ggplot2)
 library(gvlma) 
 library(car)
 library(RCurl)
+setwd("/Users/chiarasemenzin/Documents/GitHub/LangComplexity/")
 
 docloc='https://docs.google.com/spreadsheets/d/e/2PACX-1vSzvJcT6yT9_fpRoFg5O7LAput7VKKltSxAuGMyC5wDlo_75D9ELA8YaVeMIVwcLw/pub?gid=1294110857&single=true&output=csv'
 myfile <- getURL(docloc, ssl.verifyhost=FALSE, ssl.verifypeer=FALSE)
@@ -13,10 +14,10 @@ all_data<- read.csv(textConnection(myfile), header=T)
 
 #an error can be solved by using ";" or "," as a separator
 all_data<- read.csv("./Data/CR_by_child-updated_3_08.xlsx - MAIN.csv", header=T,sep=";")
-
+tsi_data<-read.csv("./Data/CR_by_child_tsi.csv",header=T)
 summary(all_data)
 dim(all_data)
-
+all_data<-rbind.fill(all_data, tsi_data)
 
 # apply exclusions
 #data.sub <- subset(all_data,  Age_in_months<=50)
