@@ -54,6 +54,8 @@ ggplot(data.sub,aes(x=CR,fill=SylComp))+
 
 
 ggplot(data.sub, aes(x=Age, y=CR, color=Language)) +
+  labs(x = "Age (months)")+
+  labs(y = "CP")+
   geom_point()+
 # Add regression lines
   geom_smooth(method=lm,se=FALSE)
@@ -148,6 +150,10 @@ summary(mod_int_age_noTsi_ageScaled_no_old)
 data.sub_under40=subset(data.sub, Age<40 & corpus!="Warlaumont")
 # plot data
 ggplot(data.sub_under40, aes(x=Age, y=CR, color=SylComp)) +
+  labs(title = "Distribution of CP wrt. Age (up to 40 months)")+
+  labs(colour = "Syllable Complexity")+
+  labs(x = "Age (months)")+
+  labs(y = "CP")+
   geom_point()+
   # Add regression lines
   # geom_smooth(method=lm)+
