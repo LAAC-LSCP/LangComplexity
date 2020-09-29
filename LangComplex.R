@@ -3,7 +3,6 @@ library(ggplot2)
 library(gvlma) 
 library(car)
 library(RCurl)
-setwd("/Users/chiarasemenzin/Documents/GitHub/LangComplexity/")
 
 docloc='https://docs.google.com/spreadsheets/d/e/2PACX-1vSzvJcT6yT9_fpRoFg5O7LAput7VKKltSxAuGMyC5wDlo_75D9ELA8YaVeMIVwcLw/pub?gid=1294110857&single=true&output=csv'
 myfile <- getURL(docloc, ssl.verifyhost=FALSE, ssl.verifypeer=FALSE)
@@ -154,3 +153,13 @@ ggplot(data.sub_under40, aes(x=Age, y=CR, color=SylComp)) +
   # geom_smooth(method=lm)+
   # Add loess lines
   geom_smooth(span = 0.8)
+  
+#Mean CR and standard deviation
+"Average CR"; mean(data.sub_under40$CR) ; "Standard Deviation" ; sd(data.sub_under40$CR)
+
+"Average CR for low syllable complexity"; mean(data.sub_under40$CR[data.sub_under40$SylComp == "Low"]) ; "Standard Deviation" ; sd(data.sub_under40$CR[data.sub_under40$SylComp == "Low"])
+"Average CR for moderate syllable complexity"; mean(data.sub_under40$CR[data.sub_under40$SylComp == "Moderate"]) ; "Standard Deviation" ; sd(data.sub_under40$CR[data.sub_under40$SylComp == "Moderate"])
+"Average CR for high syllable complexity"; mean(data.sub_under40$CR[data.sub_under40$SylComp == "High"]) ; "Standard Deviation" ; sd(data.sub_under40$CR[data.sub_under40$SylComp == "High"])
+
+boxplot(data.sub_under40$CR~data.sub_under40$SylComp, main="Distribution of CP by syllable complexity", xlab="Syllable complexity", ylab="CP")
+
