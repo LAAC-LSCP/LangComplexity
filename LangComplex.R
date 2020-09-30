@@ -12,11 +12,12 @@ all_data<- read.csv(textConnection(myfile), header=T)
 # https://docs.google.com/spreadsheets/d/1rhpTqgpv9VgsZOtoEHqxwShYrZIsbiB_/edit#gid=1860768761
 
 #an error can be solved by using ";" or "," as a separator
-all_data<- read.csv("./Data/CR_by_child-updated_3_08.xlsx - MAIN.csv", header=T,sep=";")
-tsi_data<-read.csv("./Data/CR_by_child_tsi.csv",header=T)
+all_data<- read.csv("./Data/CR_by_child-updated_3_08.xlsx - MAIN.csv", header=T,sep=",")
+
+#tsi_data<-read.csv("./Data/CR_by_child_tsi.csv",header=T)
 summary(all_data)
 dim(all_data)
-all_data<-rbind.fill(all_data, tsi_data)
+#all_data<-rbind.fill(all_data, tsi_data)
 
 # apply exclusions
 #data.sub <- subset(all_data,  Age_in_months<=50)
@@ -169,3 +170,17 @@ ggplot(data.sub_under40, aes(x=Age, y=CR, color=SylComp)) +
 
 boxplot(data.sub_under40$CR~data.sub_under40$SylComp, main="Distribution of CP by syllable complexity", xlab="Syllable complexity", ylab="CP")
 
+
+#______________
+#model for children under 40
+
+mod_int_age2_no_old=lm(CR~Age*SylComp+Age2*SylComp,data=data.sub,
+                                      subset=c(Age<40))
+
+plot(mod_int_age2_no_old) 
+gvlma(mod_int_age2_no_old)  #Heteroscedasticity not satisfied
+Anova(mod_int_age2_no_old, type="III") 
+summary(mod_int_age2_no_old)
+
+
+ 
