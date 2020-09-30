@@ -3,6 +3,7 @@ library(ggplot2)
 library(gvlma) 
 library(car)
 library(RCurl)
+library(plyr)
 
 docloc='https://docs.google.com/spreadsheets/d/e/2PACX-1vSzvJcT6yT9_fpRoFg5O7LAput7VKKltSxAuGMyC5wDlo_75D9ELA8YaVeMIVwcLw/pub?gid=1294110857&single=true&output=csv'
 myfile <- getURL(docloc, ssl.verifyhost=FALSE, ssl.verifypeer=FALSE)
@@ -148,7 +149,9 @@ Anova(mod_int_age_noTsi_ageScaled_no_old, type="III")
 summary(mod_int_age_noTsi_ageScaled_no_old)
 
 #replot without kids over 40
-data.sub_under40=subset(data.sub, Age<40 & corpus!="Warlaumont")
+data.sub_under40=subset(data.sub, Age<40) 
+#Check how many children this subset gives in the result - it should be 120
+
 # plot data
 ggplot(data.sub_under40, aes(x=Age, y=CR, color=SylComp)) +
   labs(title = "Distribution of CP wrt. Age (up to 40 months)")+
@@ -171,16 +174,28 @@ ggplot(data.sub_under40, aes(x=Age, y=CR, color=SylComp)) +
 boxplot(data.sub_under40$CR~data.sub_under40$SylComp, main="Distribution of CP by syllable complexity", xlab="Syllable complexity", ylab="CP")
 
 
-#______________
+#______________ 
 #model for children under 40
 
-mod_int_age2_no_old=lm(CR~Age*SylComp+Age2*SylComp,data=data.sub,
-                                      subset=c(Age<40))
+#It seems that the merging of Tsi_ and all_data frames didn't work correctly so I'm doing it one more time and we have 120 children under 40 as a result
+data.sub_no_old_main <- subset(data.sub,  Age<=40)
+data.sub_no_old_tsi <- subset(tsi_data,  Age<=40)
+data.sub_no_old_all<-rbind.fill(data.sub_no_old_main, data.sub_no_old_tsi)
+
+mod_int_age2_no_old=lm(CR~Age*SylComp+Age2*SylComp,data=data.sub_no_old_all)
 
 plot(mod_int_age2_no_old) 
 gvlma(mod_int_age2_no_old)  #Heteroscedasticity not satisfied
 Anova(mod_int_age2_no_old, type="III") 
 summary(mod_int_age2_no_old)
 
+#______________
+#Interaction with simple model
+#mod_int_age2_no_old=lm(CR~Age*SylComp+Age2*SylComp,data=data.sub_no_old_all)
+mod_int_age2_no_old_int=lm(CR~Age*Language,data=data.sub)
 
+plot(mod_int_age2_no_old_int) 
+gvlma(mod_int_age2_no_old_int) 
+Anova(mod_int_age2_no_old_int, type="III") 
+summary(mod_int_age2_no_old_int)
  
