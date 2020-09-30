@@ -14,9 +14,10 @@ all_data<- read.csv(textConnection(myfile), header=T)
 #an error can be solved by using ";" or "," as a separator
 all_data<- read.csv("./Data/CR_by_child-updated_3_08.xlsx - MAIN.csv", header=T,sep=";")
 tsi_data<-read.csv("./Data/CR_by_child_tsi.csv",header=T)
+names(tsi_data)[names(tsi_data) == "Age"] <- "Age.in.months"
+all_data<-rbind.fill(all_data, tsi_data)
 summary(all_data)
 dim(all_data)
-all_data<-rbind.fill(all_data, tsi_data)
 
 # apply exclusions
 #data.sub <- subset(all_data,  Age_in_months<=50)
