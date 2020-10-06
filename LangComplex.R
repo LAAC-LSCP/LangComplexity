@@ -3,6 +3,7 @@ library(ggplot2)
 library(gvlma) 
 library(car)
 library(RCurl)
+library(plyr)
 
 docloc='https://docs.google.com/spreadsheets/d/e/2PACX-1vSzvJcT6yT9_fpRoFg5O7LAput7VKKltSxAuGMyC5wDlo_75D9ELA8YaVeMIVwcLw/pub?gid=1294110857&single=true&output=csv'
 myfile <- getURL(docloc, ssl.verifyhost=FALSE, ssl.verifypeer=FALSE)
@@ -150,17 +151,23 @@ summary(mod_int_age_noTsi_ageScaled_no_old)
 #replot without kids over 40
 data.sub_under40=subset(data.sub, Age<40 & corpus!="Warlaumont")
 # plot data
-ggplot(data.sub_under40, aes(x=Age, y=CR, color=SylComp)) +
+ggplot(data.sub_under40, aes(x=Age, y=CR, color=SylComp, shape=SylComp)) +
   labs(title = "Distribution of CP wrt. Age (up to 40 months)")+
-  labs(colour = "Syllable Complexity")+
+  labs(colour = "Syllable Complexity", shape="Syllable Complexity")+
+  theme_bw()+
+  theme(panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank())+
+  scale_color_manual(values=c("#E69F00", "#56B4E9", "#009E73"))+
+  scale_shape_manual(values=c(4, 16, 0))+
   labs(x = "Age (months)")+
   labs(y = "CP")+
-  geom_point()+
+  geom_point(size=2.5)+
   # Add regression lines
-  # geom_smooth(method=lm)+
+  geom_smooth(method=lm, se=FALSE)
   # Add loess lines
-  geom_smooth(span = 0.8)
+  #geom_smooth(span = 0.8)
   
+
 #Mean CR and standard deviation
 "Average CR"; mean(data.sub_under40$CR) ; "Standard Deviation" ; sd(data.sub_under40$CR)
 
