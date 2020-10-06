@@ -177,3 +177,48 @@ ggplot(data.sub_under40, aes(x=Age, y=CR, color=SylComp, shape=SylComp)) +
 
 boxplot(data.sub_under40$CR~data.sub_under40$SylComp, main="Distribution of CP by syllable complexity", xlab="Syllable complexity", ylab="CP")
 
+
+# Low vs. Moderate vs. High complexity -----------------------------------------
+
+#Pearson's correlations for each SylComp level
+data.sub_under40_L <- subset(data.sub_under40,  SylComp=="Low")
+data.sub_under40_M <- subset(data.sub_under40,  SylComp=="Moderate")
+data.sub_under40_H <- subset(data.sub_under40,  SylComp=="High")
+"Low SylComp"; cor.test(data.sub_under40_L$Age,data.sub_under40_L$CR) #0.7598376
+"Moderate SylComp"; cor.test(data.sub_under40_M$Age,data.sub_under40_M$CR) #0.3671603 Pretty low...
+"High SylComp"; cor.test(data.sub_under40_H$Age,data.sub_under40_H$CR) #0.7770199
+
+#check assumptions
+#Low SylComp
+lm_Low <- lm(data.sub_under40_L$CR~data.sub_under40_L$Age)
+par(mfrow=c(2,2))
+plot(lm_Low, main="Low SylComp")
+#Moderate Sylcomp
+lm_Mod <- lm(data.sub_under40_M$CR~data.sub_under40_M$Age)
+par(mfrow=c(2,2))
+plot(lm_Mod, main="Moderate SylComp") # homoscedasticity pretty bad
+#High SylComp
+lm_High <- lm(data.sub_under40_H$CR~data.sub_under40_H$Age)
+par(mfrow=c(2,2))
+plot(lm_High, main="High SylComp")
+
+#Low vs. Moderate
+LvM <- subset(data.sub_under40,  SylComp!="High")
+lm_LvM <- (lm(LvM$CR~LvM$Age))
+par(mfrow=c(2,2))
+plot(lm_LvM, main="Low and Moderate")
+"Low vs. Moderate"; anova(lm(LvM$CR~LvM$Age*LvM$SylComp))
+
+#Moderate vs. High
+MvH <- subset(data.sub_under40,  SylComp!="Low")
+lm_MvH <- (lm(MvH$CR~MvH$Age))
+par(mfrow=c(2,2))
+plot(lm_MvH, main="Moderate and High")
+"Moderate vs. High"; anova(lm(MvH$CR~MvH$Age*MvH$SylComp))
+
+#Low vs. High
+LvH <- subset(data.sub_under40,  SylComp!="Moderate")
+lm_LvH <- (lm(LvH$CR~LvH$Age))
+par(mfrow=c(2,2))
+plot(lm_LvH, main="Low and High")
+"Low vs. High"; anova(lm(LvH$CR~LvH$Age*LvH$SylComp))
