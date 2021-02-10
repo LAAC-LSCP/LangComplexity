@@ -87,7 +87,7 @@ mydata_sub$age3=mydata_sub$age^3 #generate cubic component
 mydata_sub<-subset(mydata_sub, !is.na(Mad_C)) #NA are excluded -> 111 children
 #mydata_sub$coding<-ifelse(mydata_sub$corp %in% c("Solomon","French"),"lab","citsci") # add more information
 
-
+#Visualization  ---------------------------------
 
 # describe data
 table(mydata_sub$corp)
@@ -125,6 +125,20 @@ ggplot(mydata_sub, aes(x=age, y=CR, color=lang)) +
   geom_point()+
   # Add regression lines
   geom_smooth(method=lm,se=FALSE)
+
+
+#More colorful diagrams :D
+ggplot(mydata_sub,aes(x=CR,fill=C_count))+      #Consonants
+  geom_histogram(bins=20,color="black") + 
+  facet_grid(.~Mad_syl_comp)  
+
+
+ggplot(mydata_sub,aes(x=CR,fill=V_count))+      #Vowels
+  geom_histogram(bins=20,color="black") + 
+  facet_grid(.~Mad_syl_comp) 
+
+
+
 
 #MODELS  ---------------------------------
 # Fit most complex models
