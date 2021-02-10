@@ -1,9 +1,17 @@
 # LangComplexity
 
-Scripts for the analysis of cross-linguistic data in the context of the project "Canonical Rate & Language Properties".
+Scripts for the analysis of cross-linguistic data in the context of the project "Canonical Rate & Language Properties":
+
+* [LangComplex](https://github.com/LAAC-LSCP/LangComplexity/blob/master/LangComplex.R) 
+  * *Description:* This script run the analysis on children CP wrt. to their language complexity (e.g. different syllable complexity levels);
+* [Adult_CR_analysis](https://github.com/LAAC-LSCP/LangComplexity/blob/master/Adult_CR_analysis.R)
+  * *Description:* Analysis on adult CP wrt. to their language complexity;
+* [PhonComplex](https://github.com/LAAC-LSCP/LangComplexity/blob/master/PhonComplex.R)
+  * *Description:* Qualitative analysis of phonetical complexity (i.e. vowels and consonants) based on Maddieson classification;
+* [Numeric_Consonants_and_Vowels](https://github.com/LAAC-LSCP/LangComplexity/blob/master/Numeric_Consonants_and_Vowels.R)
+  * *Description:* Quantative analysis of phonetical complexity (i.e. vowels and consonants) 
+
 For more information about Binder visit this link: https://mybinder.readthedocs.io/en/latest/index-getting-started.html
-
-
 You can either make changes to the analysis pipeline, or simply reproduce the pipeline.
 
 ##  To make changes to the analysis pipeline
