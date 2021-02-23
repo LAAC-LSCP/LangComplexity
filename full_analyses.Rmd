@@ -1,0 +1,51 @@
+---
+title: "Full CR analyses"
+author: "NK & AC"
+date: "2/23/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library(tidyverse)
+library(ggplot2)
+library(gvlma) 
+library(car)
+library(RCurl)
+library(plyr)
+library(readxl)
+
+
+```
+
+## Read in data
+
+```{r read-in}
+all_data<- read_excel("./Data/CR_by_child-updated_21_01.xlsx")
+
+#definitions
+mydata$age <-  as.numeric(coalesce(mydata$`Age in months`, mydata$Age)) #combining age of both datasets
+mydata <- mydata %>% 
+  filter(age <= 40) #after this your data reduces to 120 observations (<40) which you care about.
+
+mydata$syl_comp <- factor(mydata$`Syllable complexity`, levels=c("Low","Moderate","High"))
+
+table(mydata$ChildID)[order(table(mydata$ChildID))]
+
+mydata_clean=mydata[,c("age","lang","syl_comp","C_count","V_count","CR")]
+
+```
+
+## TODO
+
+1) make sure that all eaf's are in osf & go from eaf to CP
+2) figure out how to go from zooniverse to cr
+3) get CP data from the other CP project
+this comes from osf.io/d4pvh
+
+
+4) create merged dataset with both data from eaf & data from zooniverse
+
+- why do we have a separate spreadsheet for tsimane?
+- are there missing children?
