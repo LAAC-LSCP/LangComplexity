@@ -2,9 +2,9 @@
 
 Here, you can find scripts and datasets for the analysis of cross-linguistic data in the context of the project "Canonical Rate & Language Properties"
 
-Scripts:
+Structure of the pipeline:
 * [LangComplex](https://github.com/LAAC-LSCP/LangComplexity/blob/master/LangComplex.R) 
-  * *Description:* This script run the analysis on children CP wrt. to their language complexity (e.g. different syllable complexity levels);
+  * *Description:* Analysis on children CP wrt. to their language complexity (e.g. different syllable complexity levels);
 * [Adult_CR_analysis](https://github.com/LAAC-LSCP/LangComplexity/blob/master/Adult_CR_analysis.R)
   * *Description:* Analysis on adult CP wrt. to their language complexity;
 * [PhonComplex](https://github.com/LAAC-LSCP/LangComplexity/blob/master/PhonComplex.R)
@@ -12,6 +12,8 @@ Scripts:
 * [Numeric_Consonants_and_Vowels](https://github.com/LAAC-LSCP/LangComplexity/blob/master/Numeric_Consonants_and_Vowels.R)
   * *Description:* Quantative analysis of phonetical complexity (i.e. vowels and consonants) 
 
+Data processed from annotated ELAN files into readable xslx/cvc datasets are located in [Data](https://github.com/LAAC-LSCP/LangComplexity/tree/master/Data) folder.
+ 
 Datasets are located in the following folders:
 * [RawData]() contains original data that was used in the analysis
 * [Data](https://github.com/LAAC-LSCP/LangComplexity/tree/master/Data) 
