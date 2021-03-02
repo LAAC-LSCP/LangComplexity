@@ -6,15 +6,23 @@ output: html_document
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
 
-library(tidyverse)
-library(ggplot2)
-library(gvlma) 
-library(car)
-library(RCurl)
-library(plyr)
-library(readxl)
+library(groundhog)
+groundhog.day="2021-02-23"
+pkgs=c('tidyverse','ggplot2','gvlma','car','RCurl','plyr','readxl','knitr',
+       'rmarkdown')
+groundhog.library(pkgs, groundhog.day)
+
+
+# Seed for random number generation
+set.seed(22)
+
+#document session info
+capture.output(sessionInfo(),file="lastknit_session_info.txt")
+
+opts_chunk$set(echo = TRUE)
+
+
 
 
 ```
@@ -22,7 +30,71 @@ library(readxl)
 ## Read in data
 
 ```{r read-in}
-all_data<- read_excel("./Data/CR_by_child-updated_21_01.xlsx")
+
+# Generate canonical proportion for data from .eaf
+  # French Solomon Tsimane
+raw_eaf_data<- read_excel("RawData/Raw_data_full.xlsx")
+raw_eaf_data$Subtier_type<-NA
+raw_eaf_data$Subtier_type[grep("vcm",raw_eaf_data$Subtier)]<-"vcm"
+raw_eaf_data$clean_ChildID <- gsub("_period.*","",gsub("_._period.*","",raw_eaf_data$Filename))
+raw_eaf_data$clean_ChildID <- gsub("random.*","",raw_eaf_data$clean_ChildID)
+raw_eaf_data$clean_ChildID <- gsub("periodic.*","",raw_eaf_data$clean_ChildID)
+raw_eaf_data$clean_ChildID <- gsub("_LD.*","",raw_eaf_data$clean_ChildID)
+
+vcm_tab <- table(raw_eaf_data$clean_ChildID[raw_eaf_data$Subtier_type=="vcm" & raw_eaf_data$Tier=="CHI"],raw_eaf_data$Type[raw_eaf_data$Subtier_type=="vcm" & raw_eaf_data$Tier=="CHI"])
+vcm_tab_chi_eaf <- vcm_tab[,"C"]/(vcm_tab[,"C"]+vcm_tab[,"N"])
+
+# Generate canonical proportion for data from cychosz
+  #contains: Casillas-Yeli       Cychosz Seedlings      Tsimane    Warlaumont 
+raw_cychosz_data<- read_csv("Data/meta_answers_global_crossling_9-20.csv")
+raw_cychosz_data$unique_child_ID <- paste(raw_cychosz_data$language,raw_cychosz_data$child_ID)
+
+vcm_tab <- table(raw_cychosz_data$unique_child_ID,raw_cychosz_data$Answer)
+vcm_tab_chi_cychosz <- vcm_tab[,"Canonical"]/(vcm_tab[,"Canonical"]+vcm_tab[,"Non-canonical"])
+
+# Generate canonical proportion for data from zooniverse #TODO
+  #contains: Yélî & Tsimane
+
+other_data<- read_excel("Data/CR_by_child-updated_21_01.xlsx")
+other_data_tsi<- read_excel("Data/CR_by_child_tsi.xlsx")
+
+# we'll use the best and most data we can:
+#- Yélî will come from zooniverse-other DONE
+#- Tsimane will come from zooniverse-tsi DONE
+#- French Solomon from eaf DONE
+#- the rest of the corpora will come from cychosz TODO
+
+#also, we want to be able to merge our CPs into other_data because other_data has age of the child
+
+best_data=other_data[other_data$corpus %in% c("Yélî"),]
+
+#next, add tsi kids
+best_data <- merge(best_data,other_data_tsi,by="ChildID",all=T)
+
+#next, add French & Solomon
+#to this end, first we need to add the CPs
+vcm_tab_chi_eaf2=data.frame(cbind(vcm_tab_chi_eaf,names(vcm_tab_chi_eaf)))
+colnames(vcm_tab_chi_eaf2)<-c("CP","clean_ChildID")
+vcm_tab_chi_eaf2$CP <- as.numeric(as.character(vcm_tab_chi_eaf2$CP))
+
+#subset to French & Solomon 
+other_data_fs <- subset(other_data, corpus %in% c("French","Solomon"))
+other_data_fs$clean_ChildID <-gsub("_period.*","",gsub("_._period.*","",other_data_fs$ChildID))
+other_data_fs$clean_ChildID <- gsub("random.*","",other_data_fs$clean_ChildID)
+other_data_fs$clean_ChildID <- gsub("periodic.*","",other_data_fs$clean_ChildID)
+other_data_fs$clean_ChildID <- gsub("_LD.*","",other_data_fs$clean_ChildID)
+
+other_data_fs <- merge(other_data_fs,vcm_tab_chi_eaf2,by="clean_ChildID",all=T)
+
+#and next we add French & Solomon 
+best_data <- merge(best_data,other_data_fs,by="ChildID",all=T)
+
+#stopped here!
+# what is missing is:
+# fill in age for 2 French children who are missing age, we can tell the age from the file name:
+# FRH_020712 is 2 years 7 months 12 days
+#GOG_000302 3 months 2 days
+
 
 #definitions
 mydata$age <-  as.numeric(coalesce(mydata$`Age in months`, mydata$Age)) #combining age of both datasets
@@ -39,11 +111,7 @@ mydata_clean=mydata[,c("age","lang","syl_comp","C_count","V_count","CR")]
 
 ## TODO
 
-1) make sure that all eaf's are in osf & go from eaf to CP
-2) figure out how to go from zooniverse to cr
-3) get CP data from the other CP project
-this comes from osf.io/d4pvh
-
+2) figure out how to go from zooniverse to cr ??
 
 4) create merged dataset with both data from eaf & data from zooniverse
 

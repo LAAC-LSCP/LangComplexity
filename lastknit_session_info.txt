@@ -1,0 +1,49 @@
+R version 4.0.4 (2021-02-15)
+Platform: x86_64-apple-darwin17.0 (64-bit)
+Running under: macOS High Sierra 10.13.6
+
+Matrix products: default
+BLAS:   /System/Library/Frameworks/Accelerate.framework/Versions/A/Frameworks/vecLib.framework/Versions/A/libBLAS.dylib
+LAPACK: /Library/Frameworks/R.framework/Versions/4.0/Resources/lib/libRlapack.dylib
+
+locale:
+[1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
+
+attached base packages:
+[1] stats     graphics  grDevices utils     datasets  methods   base     
+
+other attached packages:
+ [1] rmarkdown_2.7   knitr_1.31      readxl_1.3.1    plyr_1.8.6      RCurl_1.98-1.2  car_3.0-10      gvlma_1.0.0.3  
+ [8] forcats_0.5.1   stringr_1.4.0   dplyr_1.0.4     purrr_0.3.4     readr_1.4.0     tidyr_1.1.2     tibble_3.0.6   
+[15] ggplot2_3.3.3   tidyverse_1.3.0 groundhog_1.2.0
+
+loaded via a namespace (and not attached):
+  [1] minqa_1.2.4              colorspace_2.0-0         RcppEigen_0.3.3.9.1      selectr_0.4-2           
+  [5] rio_0.5.16               ellipsis_0.3.1           rprojroot_2.0.2          markdown_1.1            
+  [9] RcppArmadillo_0.10.2.1.0 base64enc_0.1-3          fs_1.5.0                 rstudioapi_0.13         
+ [13] farver_2.0.3             MatrixModels_0.4-1       waldo_0.2.4              fansi_0.4.2             
+ [17] lubridate_1.7.9.2        diffobj_0.3.3            xml2_1.3.2               splines_4.0.4           
+ [21] pkgload_1.1.0            jsonlite_1.7.2           nloptr_1.2.2.2           pbkrtest_0.5-0.1        
+ [25] rematch_1.0.1            broom_0.7.5              dbplyr_2.1.0             clipr_0.7.1             
+ [29] compiler_4.0.4           httr_1.4.2               backports_1.2.1          assertthat_0.2.1        
+ [33] Matrix_1.3-2             cli_2.3.0                quantreg_5.83            htmltools_0.5.1.1       
+ [37] prettyunits_1.1.1        tools_4.0.4              gtable_0.3.0             glue_1.4.2              
+ [41] tinytex_0.29             Rcpp_1.0.6               carData_3.0-4            cellranger_1.1.0        
+ [45] vctrs_0.3.6              nlme_3.1-152             conquer_1.0.2            xfun_0.21               
+ [49] ps_1.5.0                 brio_1.1.1               lme4_1.1-26              openxlsx_4.2.3          
+ [53] testthat_3.0.2           rvest_0.3.6              mime_0.10                lifecycle_1.0.0         
+ [57] sys_3.4                  statmod_1.4.35           MASS_7.3-53.1            scales_1.1.1            
+ [61] hms_1.0.0                parallel_4.0.4           SparseM_1.81             rematch2_2.1.2          
+ [65] RColorBrewer_1.1-2       yaml_2.2.1               curl_4.3                 stringi_1.5.3           
+ [69] highr_0.8                maptools_1.0-2           desc_1.2.0               boot_1.3-27             
+ [73] pkgbuild_1.2.0           zip_2.1.1                cpp11_0.2.6              bitops_1.0-6            
+ [77] rlang_0.4.10             pkgconfig_2.0.3          matrixStats_0.58.0       BH_1.75.0-0             
+ [81] evaluate_0.14            lattice_0.20-41          labeling_0.4.2           processx_3.4.5          
+ [85] tidyselect_1.1.0         magrittr_2.0.1           R6_2.5.0                 generics_0.1.0          
+ [89] DBI_1.1.1                pillar_1.5.0             haven_2.3.1              foreign_0.8-81          
+ [93] withr_2.4.1              mgcv_1.8-34              abind_1.4-5              sp_1.4-5                
+ [97] nnet_7.3-15              praise_1.0.0             modelr_0.1.8             crayon_1.4.1            
+[101] utf8_1.1.4               progress_1.2.2           grid_4.0.4               isoband_0.2.3           
+[105] data.table_1.14.0        blob_1.2.1               callr_3.5.1              reprex_1.0.0            
+[109] digest_0.6.27            numDeriv_2016.8-1.1      openssl_1.4.3            munsell_0.5.0           
+[113] viridisLite_0.3.0        askpass_1.1             
