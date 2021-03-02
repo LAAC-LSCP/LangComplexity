@@ -9,7 +9,7 @@ Structure of the pipeline:
 * [Numeric_Consonants_and_Vowels](https://github.com/LAAC-LSCP/LangComplexity/blob/master/Numeric_Consonants_and_Vowels.R) - Quantative analysis of phonetical complexity (i.e. vowels and consonants) 
 
 Data processed from annotated ELAN files into readable xlsx/cvc datasets are located in [Data](https://github.com/LAAC-LSCP/LangComplexity/tree/master/Data) folder.
-[Raw Data]() that contain original data that were used in the analysis will be uploaded soon.
+[Raw Data](https://github.com/LAAC-LSCP/LangComplexity/tree/master/RawData) contains original data  from OSF used for the analysis.
 
 You can either make changes to the analysis pipeline, or simply reproduce the pipeline.
 
