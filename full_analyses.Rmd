@@ -161,17 +161,17 @@ mydata_sub$Maddieson_VQ_Inv <- NULL
 
 mydata_sub<-subset(mydata_sub, !is.na(Mad_C)) #NA are excluded -> 63 children
 
+#correction some definitions in data
+mydata_sub$C_count <- as.numeric(mydata_sub$C_count)
+mydata_sub$V_count <- as.numeric(mydata_sub$V_count)
+mydata_sub$corpus <- as.factor(mydata_sub$corpus)
+
 ```
 
 ## Graphs
 ```{r read-in}
 summary(mydata_sub)
 dim(mydata_sub)
-
-#correction some definitions in data
-mydata_sub$C_count <- as.numeric(mydata_sub$C_count)
-mydata_sub$V_count <- as.numeric(mydata_sub$V_count)
-mydata_sub$corpus <- as.factor(mydata_sub$corpus)
 
 #Histograms
 hist(mydata_sub$CR,main="CR",xlab="CR") #quite normally distributed
@@ -193,7 +193,7 @@ ggplot(mydata_sub,aes(x=CR,fill=Mad_VQ))+
   labs(y = "Vowels")+
   labs(title = 'Distributinon of Vowels') 
 
-
+library("ggridges")
 ggplot(mydata_sub,aes(x = age, y = Mad_syl_comp)) +
   geom_density_ridges_gradient(aes(fill = ..x..), scale = 3, size = 0.3) +
   scale_fill_gradientn(colours = c("#0D0887FF", "#CC4678FF", "#F0F921FF"),name = "Age")+
@@ -285,7 +285,7 @@ mydata_sub_L <- subset(mydata_sub,  Mad_C=="Large")
 
 "Moderately Small Mad_C"; cor.test(mydata_sub_S$age,mydata_sub_S$CR) #0.87546 
 "Average Mad_C"; cor.test(mydata_sub_A$age,mydata_sub_A$CR) #0.587497 
-"Moderately large Mad_C"; cor.test(mydata_sub_L$age,mydata_sub_L$CR) #WHY IT LEADS TO ERROR?
+"Large Mad_C"; cor.test(mydata_sub_L$age,mydata_sub_L$CR) #0.6306421
 
 
 #check assumptions
@@ -297,10 +297,10 @@ plot(lm_Small, main="Moderately Small Mad_C")
 lm_Avg <- lm(mydata_sub_A$CR~mydata_sub_A$age)
 par(mfrow=c(2,2))
 plot(lm_Avg, main="Average Mad_C")  
-#Large Mad_C  #ERROR
+#Large Mad_C  
 lm_large <- lm(mydata_sub_L$CR~mydata_sub_L$age)
 par(mfrow=c(2,2))
-plot(lm_large, main="Moderately large Mad_C") #looks quite bad
+plot(lm_large, main="Moderately large Mad_C") 
 
 
 #Small vs. Average
@@ -362,6 +362,17 @@ lm_data <- lm(CR ~ age + Mad_C + Mad_VQ, data = mydata_sub)
 summary(lm_data)
 summary(lm(age ~ CR +  Mad_VQ + Mad_C))
 #kable
+
+library(ggiraphExtra)
+ggPredict(lm_data,se=TRUE,interactive=TRUE)
+
+lm_data2 <- lm(formula = CR ~ age * (Mad_C + Mad_VQ), data = mydata_sub)
+summary(lm_data2)
+ggPredict(lm_data2,se=TRUE,interactive=TRUE)
+
+lm_data3 <- lm(formula = CR ~ age * Mad_syl_comp, data = mydata_sub)
+summary(lm_data3)
+ggPredict(lm_data3,se=TRUE,interactive=TRUE)
 
 ```
 
