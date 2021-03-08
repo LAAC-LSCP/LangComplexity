@@ -8,10 +8,14 @@ output: html_document
 ```{r setup, include=FALSE}
 library(tidyverse) # I wasn't able to run this package from groundhog in Windows
 library(car) # I wasn't able to run this package from groundhog in Windows
+ 
+#new library for graphs
+library(ggpubr) 
+library(ggiraphExtra)
 
 library(groundhog)
 groundhog.day="2021-02-23"
-pkgs=c('tidyverse','ggplot2','gvlma','car','RCurl','plyr','readxl','knitr',
+pkgs=c('tidyverse','ggplot2', 'gvlma','car','RCurl','plyr','readxl','knitr',
        'rmarkdown')
 groundhog.library(pkgs, groundhog.day)
 
@@ -126,7 +130,7 @@ best_data_final$age <-  as.numeric(coalesce(best_data_final$`Age in months`, bes
 best_data_final <- best_data_final %>% 
   filter(age <= 40) #after this your data reduces to 72 observations (<40) which you care about.
 
-table(best_data_final$ChildID)[order(table(best_data_final$ChildID))]
+#table(best_data_final$ChildID)[order(table(best_data_final$ChildID))]
 
 best_data_clean=best_data_final[,c("age","lang","corpus", "syl_comp","C_count","V_count","CR")]
 
@@ -216,6 +220,20 @@ ggplot(mydata_sub,aes(x = CR, y = Mad_VQ)) +
   labs(y = "Vowels")+
   labs(title = 'Distributinon of Vowels') 
 
+ggscatter(
+  mydata_sub, x = "CR", y = "age",
+  facet.by  = c("Mad_VQ", "Mad_syl_comp"), 
+  short.panel.labs = FALSE
+  )+
+  stat_smooth(method = "loess", span = 0.9)
+
+ggscatter(
+  mydata_sub, x = "CR", y = "age",
+  facet.by  = c("Mad_C", "Mad_syl_comp"), 
+  short.panel.labs = FALSE
+  )+
+  stat_smooth(method = "loess", span = 0.9)
+
 
 ggplot(mydata_sub, aes(x=age, y=CR, color=lang)) +
   labs(colour = "Languages", shape="Languages") +
@@ -273,20 +291,26 @@ ggplot(mydata_sub, aes(x = factor(Mad_VQ,
 
 ```
 
-## Pearson correlation
+## Analysis
 
 ```{r read-in}
+
 #Small vs. Average vs. Mod. Large Consonants -----------------------------------------
 
 #Pearson's correlations for each Mad_C level
 mydata_sub_S <- subset(mydata_sub,  Mad_C=="Moderately Small")
 mydata_sub_A <- subset(mydata_sub,  Mad_C=="Average")
-mydata_sub_L <- subset(mydata_sub,  Mad_C=="Large")
+mydata_sub_L <- subset(mydata_sub,  Mad_C=="Large") 
 
+#summary(mydata_sub)
 "Moderately Small Mad_C"; cor.test(mydata_sub_S$age,mydata_sub_S$CR) #0.87546 
 "Average Mad_C"; cor.test(mydata_sub_A$age,mydata_sub_A$CR) #0.587497 
-"Large Mad_C"; cor.test(mydata_sub_L$age,mydata_sub_L$CR) #0.6306421
+"Large Mad_C"; cor.test(mydata_sub_L$age,mydata_sub_L$CR) #0.6306421 
 
+ggqqplot(mydata_sub_A$age, ylab = "Age")+
+  labs(title = "Pearson's correlations for Average Consonants by Age") 
+ggqqplot(mydata_sub_A$CR, ylab = "CR")+
+  labs(title = "Pearson's correlations for Average Consonants by CR") 
 
 #check assumptions
 #Moderately Small Mad_C
@@ -301,7 +325,6 @@ plot(lm_Avg, main="Average Mad_C")
 lm_large <- lm(mydata_sub_L$CR~mydata_sub_L$age)
 par(mfrow=c(2,2))
 plot(lm_large, main="Moderately large Mad_C") 
-
 
 #Small vs. Average
 SvA <- subset(mydata_sub,  Mad_C!="Large")
@@ -325,16 +348,15 @@ plot(lm_SvL, main="Small vs. Large")#looks quite bad
 "Small vs. Large"; anova(lm(SvL$CR~SvL$age*SvL$Mad_C))
 
 
-
 #Average vs. Large Vowels -----------------------------------------
 
 #Pearson's correlations for each Mad_V level
 mydata_sub_Av <- subset(mydata_sub,  Mad_VQ=="Average")
 mydata_sub_Lr <- subset(mydata_sub,  Mad_VQ=="Large")
 
-"Average Mad_VQ"; cor.test(mydata_sub_Av$age,mydata_sub_Av$CR)  #0.4773039
+summary(mydata_sub)
+"Average Mad_VQ"; cor.test(mydata_sub_Av$age,mydata_sub_Av$CR,)  #0.4773039
 "Large Mad_VQ"; cor.test(mydata_sub_Lr$age,mydata_sub_Lr$CR)  #0.7266499
-
 
 #check assumptions
 #Average Mad_VQ
@@ -355,27 +377,38 @@ plot(lm_AvvLr, main="Average vs. Large")
 "Average vs. Large"; anova(lm(AvvLr$CR~AvvLr$age*AvvLr$Mad_VQ))
 
 
-
-#___________
+# Some Models -----------------------------------------
 attach(mydata_sub)
 lm_data <- lm(CR ~ age + Mad_C + Mad_VQ, data = mydata_sub)
 summary(lm_data)
 summary(lm(age ~ CR +  Mad_VQ + Mad_C))
-#kable
 
-library(ggiraphExtra)
 ggPredict(lm_data,se=TRUE,interactive=TRUE)
 
-lm_data2 <- lm(formula = CR ~ age * (Mad_C + Mad_VQ), data = mydata_sub)
-summary(lm_data2)
-ggPredict(lm_data2,se=TRUE,interactive=TRUE)
+lm_data_C <- lm(formula = CR~age*Mad_C, data = mydata_sub)
+summary(lm_data_C)
+ggPredict(lm_data_C,se=TRUE,interactive=TRUE)
+par(mfrow=c(2,2))
+plot(lm_data_C)  
+gvlma(lm_data_C) #Global Stat and Heteroscedasticity not satisfied
 
-lm_data3 <- lm(formula = CR ~ age * Mad_syl_comp, data = mydata_sub)
-summary(lm_data3)
-ggPredict(lm_data3,se=TRUE,interactive=TRUE)
+lm_data_V <- lm(formula = CR~age*Mad_VQ, data = mydata_sub)
+summary(lm_data_V )
+ggPredict(lm_data_V ,se=TRUE,interactive=TRUE)
+par(mfrow=c(2,2))
+plot(lm_data_V)  
+gvlma(lm_data_V) # Heteroscedasticity not satisfied
+
+lm_data_SC <- lm(formula = CR ~ age * Mad_syl_comp, data = mydata_sub)
+summary(lm_data_SC)
+ggPredict(lm_data_SC,se=TRUE,interactive=TRUE)
+par(mfrow=c(2,2))
+plot(lm_data_SC)  
+gvlma(lm_data_SC) #passes checks
+
+Anova(lm_data_SC, type="III") 
 
 ```
-
 
 ## TODO
 
@@ -392,4 +425,4 @@ Comments:
 ** I get - 16117 parsing failures when try to run raw_cychosz_data<- read_csv("Data/meta_answers_global_crossling_9-20.csv")
 ** My result is 63 children with all data (both phonetic and language complexity)
 *We lost Mod. Large Consonants in Queschua in our data
-* I cannot calculate Pearson's correlation for Yeli
+
