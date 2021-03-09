@@ -1,5 +1,5 @@
 ---
-title: "Full CR analyses"
+title: "Full CP analyses"
 author: "NK & AC"
 date: "2/23/2021"
 output: html_document
@@ -29,9 +29,16 @@ capture.output(sessionInfo(),file="lastknit_session_info.txt")
 opts_chunk$set(echo = TRUE)
 ```
 
+## TODO
+
+- increase reproducibility by using only groundhog
+- clean up the double child Id column name
+
 ## Read in data
 
 ```{r read-in}
+
+# 1. gen CP for all datasets
 
 # Generate canonical proportion for data from .eaf
   # French Solomon Tsimane
@@ -48,7 +55,7 @@ vcm_tab_chi_eaf <- vcm_tab[,"C"]/(vcm_tab[,"C"]+vcm_tab[,"N"])
 
 # Generate canonical proportion for data from cychosz
   #contains: Casillas-Yeli  Cychosz Seedlings    Tsimane    Warlaumont 
-raw_cychosz_data<- read_csv("Data/meta_answers_global_crossling_9-20.csv")
+raw_cychosz_data<- read_csv("Data/meta_answers_global_CPossling_9-20.csv")
 raw_cychosz_data$unique_child_ID <- paste(raw_cychosz_data$language,raw_cychosz_data$child_ID)
 
 vcm_tab <- table(raw_cychosz_data$unique_child_ID,raw_cychosz_data$Answer)
@@ -57,9 +64,10 @@ vcm_tab_chi_cychosz <- vcm_tab[,"Canonical"]/(vcm_tab[,"Canonical"]+vcm_tab[,"No
 # Generate canonical proportion for data from zooniverse #TODO
   #contains: Yélî & Tsimane
 
-other_data<- read_excel("Data/CR_by_child-updated_21_01.xlsx")
-other_data_tsi<- read_excel("Data/CR_by_child_tsi.xlsx")
+other_data<- read_excel("Data/CP_by_child-updated_21_01.xlsx")
+other_data_tsi<- read_excel("Data/CP_by_child_tsi.xlsx")
 
+#2. combine cp info w/ other info
 # we'll use the best and most data we can:
 #- Yélî will come from zooniverse-other DONE
 #- Tsimane will come from zooniverse-tsi DONE
@@ -71,27 +79,30 @@ other_data_tsi<- read_excel("Data/CR_by_child_tsi.xlsx")
 best_data=other_data[other_data$corpus %in% c("Yélî"),]
 
 #next, add tsi kids
-#best_data <- merge(best_data,other_data_tsi, by="ChildID", all=T)
-best_data2 <- rbind.fill(best_data,other_data_tsi) #it merge datasets smoothly in this way
+best_data2 <- rbind.fill(best_data,other_data_tsi)
 
-#next, add French & Solomon + Tsimane
+#next, add French & Solomon 
 #to this end, first we need to add the CPs
 vcm_tab_chi_eaf2=data.frame(cbind(vcm_tab_chi_eaf,names(vcm_tab_chi_eaf)))
-colnames(vcm_tab_chi_eaf2)<-c("CR","ChildID") #renamed column to ChildID for consistency
-vcm_tab_chi_eaf2$CR <- as.numeric(as.character(vcm_tab_chi_eaf2$CR))
+colnames(vcm_tab_chi_eaf2)<-c("CP","ChildID") #renamed column to ChildID for consistency
+vcm_tab_chi_eaf2$CP <- as.numeric(as.character(vcm_tab_chi_eaf2$CP))
 
 #subset to French & Solomon 
 other_data_fs <- subset(other_data, corpus %in% c("French","Solomon"))
-other_data_fs$CR <- NULL #what if we get rid of CR column here so in the following merging we could work with R calculated data
+  #clean up
+other_data_fs$CR <- NULL #we get rid of CP column here so in the following merging we could work with R calculated data
 other_data_fs$ChildID <-gsub("_period.*","",gsub("_._period.*","",other_data_fs$ChildID))
 other_data_fs$ChildID <- gsub("random.*","",other_data_fs$ChildID)
 other_data_fs$ChildID <- gsub("periodic.*","",other_data_fs$ChildID)
 other_data_fs$ChildID <- gsub("_LD.*","",other_data_fs$ChildID)
 
+#remove tsi 
+vcm_tab_chi_eaf2 <- vcm_tab_chi_eaf2[-(grep("tsi",vcm_tab_chi_eaf2$ChildID)),]
 other_data_fs<- merge(other_data_fs,vcm_tab_chi_eaf2,by="ChildID",all=T) 
 
 #Assigning values for children uploaded from OSF
-#I'm going to assign value for new children here, so it won't be messed up later in case we increase the dataset
+#I'm going to assign value for new children here, so it won't be messed up later in case we inCPease the dataset
+#TODO instead of using line numbers, use the child's IDs
 other_data_fs[c(29,31), c('Language', 'corpus')] <- 'French'
 other_data_fs[c(29,31), 'C_count'] <- '21'
 other_data_fs[c(29,31), 'V_count'] <- '17'
@@ -99,28 +110,26 @@ other_data_fs[c(29,31), 'Syllable complexity'] <- 'High'
 other_data_fs['29', 'Age in months'] <- '31.4'
 other_data_fs['31', 'Age in months'] <- '3'
 
-other_data_fs[c(32:38), c('Language', 'corpus')] = "Tsimane"
-other_data_fs[c(32:38), 'C_count'] = "25"
-other_data_fs[c(32:38), 'V_count'] = "18"
-other_data_fs[c(32:38), 'Syllable complexity'] <- 'Moderate'
-other_data_fs[c(32:33, 38), 'Gender'] <- 'F'
-other_data_fs[c(34:37), 'Gender'] <- 'M'
-
-other_data_fs[c(32:33), 'Age in months'] <- '32' 
-other_data_fs[c(34:35), 'Age in months'] <- '20' 
-other_data_fs[c(36:37), 'Age in months'] <- '48' 
-other_data_fs['38', 'Age in months'] <- '35' 
 other_data_fs$'Age in months' <- as.numeric(other_data_fs$'Age in months')
 
-#and next we add French & Solomon 
-#best_data <- merge(best_data,other_data_fs,by="ChildID",all=T) #this way doesn't combine datasets properly
-best_data_final <- rbind.fill(best_data2,other_data_fs) 
+#and next we add French & Solomon to the big data set
+best_data3 <- rbind.fill(best_data2,other_data_fs) 
 
-#stopped here!
-# what is missing is:
-# fill in age for 2 French children who are missing age, we can tell the age from the file name:
-# FRH_020712 is 2 years 7 months 12 days -DONE
-#GOG_000302 3 months 2 days - CP is 0, Should we eliminate this child in this case?
+#add cychosz's data
+#combine cp info with background info
+vcm_tab_chi_cychosz=data.frame(cbind(vcm_tab_chi_cychosz,names(vcm_tab_chi_cychosz)))
+colnames(vcm_tab_chi_cychosz)<-c("CP","ChildID") #renamed column to ChildID for consistency
+#remove tsi
+vcm_tab_chi_cychosz[-grep("Tsi",rownames(vcm_tab_chi_cychosz)),]->vcm_tab_chi_cychosz
+vcm_tab_chi_cychosz$ChildID=gsub("[+/]","",gsub(" ","",gsub("[A-Z]","",gsub("[a-z]","",vcm_tab_chi_cychosz$ChildID))))
+
+other_data_fs <- subset(other_data, corpus %in% c("Warlaumont","Seedlings", "Cychosz","Tseltal"))
+other_data_fs$ChildID=gsub("[A-Z]","",gsub("[a-z]","",other_data_fs$ChildID))
+
+other_data_fs<- merge(other_data_fs,vcm_tab_chi_cychosz,by="ChildID") 
+
+best_data_final <- rbind.fill(best_data3,other_data_fs) 
+
 
 ##CLEANING
 best_data_final$syl_comp <- factor(best_data_final$`Syllable complexity`, levels=c("Low","Moderate","High"))
@@ -128,11 +137,12 @@ best_data_final$lang <- as.factor(best_data_final$Language)
 
 best_data_final$age <-  as.numeric(coalesce(best_data_final$`Age in months`, best_data_final$Age))
 best_data_final <- best_data_final %>% 
-  filter(age <= 40) #after this your data reduces to 72 observations (<40) which you care about.
+  filter(age <= 40) #after this your data reduces to 85 observations (<40) which you care about.
 
 #table(best_data_final$ChildID)[order(table(best_data_final$ChildID))]
 
-best_data_clean=best_data_final[,c("age","lang","corpus", "syl_comp","C_count","V_count","CR")]
+best_data_clean=best_data_final[,c("age","lang","corpus", "syl_comp","C_count","V_count","CP")]
+write.csv(best_data_clean,"Data/best_data_clean.csv",row.names=F)
 
 ```
 
@@ -153,7 +163,7 @@ phon_data$Language <- NULL
 #merge the selected columns into one dataset
 mydata_sub<-merge(best_data_clean,phon_data, by="lang", all=T)  
 mydata_sub <- dplyr::distinct(mydata_sub) # TO GET RID OF DUPLICATES
-mydata_sub<-subset(mydata_sub, !is.na(CR)) #NA in CR are excluded -> 72 children
+mydata_sub<-subset(mydata_sub, !is.na(CP)) #NA in CP are excluded -> 72 children
 
 mydata_sub$Mad_syl_comp <- factor(mydata_sub$`Maddieson_sylcomp`, levels=c("Low","Moderate","High"))
 mydata_sub$Mad_C <- factor(mydata_sub$`Maddieson_C_inv`, levels=c("Moderately Small","Average","Large"))
@@ -178,11 +188,11 @@ summary(mydata_sub)
 dim(mydata_sub)
 
 #Histograms
-hist(mydata_sub$CR,main="CR",xlab="CR") #quite normally distributed
+hist(mydata_sub$CP,main="CP",xlab="CP") #quite normally distributed
 
 #Plots
 ###Consonants - doesn't look impressive. The data quite unbalanced with average property leading
-ggplot(mydata_sub,aes(x=CR,fill=Mad_C))+  
+ggplot(mydata_sub,aes(x=CP,fill=Mad_C))+  
   geom_histogram(bins=20,color="black") + 
   facet_grid(.~Mad_C)+
   labs(x = "Canonical Proportion")+
@@ -190,7 +200,7 @@ ggplot(mydata_sub,aes(x=CR,fill=Mad_C))+
   labs(title = 'Distributinon of Consonants')   
 
 ###Vowels 
-ggplot(mydata_sub,aes(x=CR,fill=Mad_VQ))+ 
+ggplot(mydata_sub,aes(x=CP,fill=Mad_VQ))+ 
   geom_histogram(bins=20,color="black") + 
   facet_grid(.~Mad_VQ)+
   labs(x = "Canonical Proportion")+
@@ -206,14 +216,14 @@ ggplot(mydata_sub,aes(x = age, y = Mad_syl_comp)) +
   labs(title = 'Distributinon of Syllable Complexity') 
 
 
-ggplot(mydata_sub,aes(x = CR, y = Mad_C)) +
+ggplot(mydata_sub,aes(x = CP, y = Mad_C)) +
   geom_density_ridges_gradient(aes(fill = ..x..), scale = 3, size = 0.3) +
   scale_fill_gradientn(colours = c("#0D0887FF", "#CC4678FF", "#F0F921FF"),name = "Age")+
   labs(x = "Canonical Proportion")+
   labs(y = "Consonants")+
   labs(title = 'Distributinon of Consonants') 
 
-ggplot(mydata_sub,aes(x = CR, y = Mad_VQ)) +
+ggplot(mydata_sub,aes(x = CP, y = Mad_VQ)) +
   geom_density_ridges_gradient(aes(fill = ..x..), scale = 3, size = 0.3) +
   scale_fill_gradientn(colours = c("#0D0887FF", "#CC4678FF", "#F0F921FF"),name = "Age")+
   labs(x = "Canonical Proportion")+
@@ -221,21 +231,21 @@ ggplot(mydata_sub,aes(x = CR, y = Mad_VQ)) +
   labs(title = 'Distributinon of Vowels') 
 
 ggscatter(
-  mydata_sub, x = "CR", y = "age",
+  mydata_sub, x = "CP", y = "age",
   facet.by  = c("Mad_VQ", "Mad_syl_comp"), 
   short.panel.labs = FALSE
   )+
   stat_smooth(method = "loess", span = 0.9)
 
 ggscatter(
-  mydata_sub, x = "CR", y = "age",
+  mydata_sub, x = "CP", y = "age",
   facet.by  = c("Mad_C", "Mad_syl_comp"), 
   short.panel.labs = FALSE
   )+
   stat_smooth(method = "loess", span = 0.9)
 
 
-ggplot(mydata_sub, aes(x=age, y=CR, color=lang)) +
+ggplot(mydata_sub, aes(x=age, y=CP, color=lang)) +
   labs(colour = "Languages", shape="Languages") +
   labs(x = "Age (months)")+
   labs(y = "CP")+
@@ -247,22 +257,22 @@ ggplot(mydata_sub, aes(x=age, y=CR, color=lang)) +
 ```
 
 
-## Mean CR and Standard Deviation (box-plots included)
+## Mean CP and Standard Deviation (box-plots included)
 
 ```{r read-in}
 
-"Average CR"; mean(mydata_sub$CR) ; "Standard Deviation" ; sd(mydata_sub$CR)
+"Average CP"; mean(mydata_sub$CP) ; "Standard Deviation" ; sd(mydata_sub$CP)
 
 #Consonants
-"Average CR for Consonants: Moderately Small"; mean(mydata_sub$CR[mydata_sub$Mad_C == "Moderately Small"]) ; "Standard Deviation" ; sd(mydata_sub$CR[mydata_sub$Mad_C == "Moderately Small"])
-"Average CR for Consonants: Average"; mean(mydata_sub$CR[mydata_sub$Mad_C == "Average"]) ; "Standard Deviation" ; sd(mydata_sub$CR[mydata_sub$Mad_C == "Average"])
+"Average CP for Consonants: Moderately Small"; mean(mydata_sub$CP[mydata_sub$Mad_C == "Moderately Small"]) ; "Standard Deviation" ; sd(mydata_sub$CP[mydata_sub$Mad_C == "Moderately Small"])
+"Average CP for Consonants: Average"; mean(mydata_sub$CP[mydata_sub$Mad_C == "Average"]) ; "Standard Deviation" ; sd(mydata_sub$CP[mydata_sub$Mad_C == "Average"])
 
-boxplot(mydata_sub$CR~mydata_sub$Mad_C, main="Distribution of CP by Consonants", xlab="Consonants", ylab="CP")
+boxplot(mydata_sub$CP~mydata_sub$Mad_C, main="Distribution of CP by Consonants", xlab="Consonants", ylab="CP")
 
 library(ggpol)
 library(scales)
 ggplot(mydata_sub, aes(x = factor(Mad_C, 
-                      labels = c("Moderately Small","Average","Large")),y = CR, fill=Mad_C)) +
+                      labels = c("Moderately Small","Average","Large")),y = CP, fill=Mad_C)) +
   geom_boxjitter(color="black", jitter.color = "darkgrey", errorbar.draw = TRUE) +
   scale_y_continuous() +
   labs(title = "Distribution of CP by Consonants", 
@@ -273,13 +283,13 @@ ggplot(mydata_sub, aes(x = factor(Mad_C,
 
 
 #Vowels
-"Average CR for Vowels: Average"; mean(mydata_sub$CR[mydata_sub$Mad_VQ == "Average"]) ; "Standard Deviation" ; sd(mydata_sub$CR[mydata_sub$Mad_VQ == "Average"])
-"Average CR for Consonants: Large"; mean(mydata_sub$CR[mydata_sub$Mad_VQ == "Large"]) ; "Standard Deviation" ; sd(mydata_sub$CR[mydata_sub$Mad_VQ == "Large"])
+"Average CP for Vowels: Average"; mean(mydata_sub$CP[mydata_sub$Mad_VQ == "Average"]) ; "Standard Deviation" ; sd(mydata_sub$CP[mydata_sub$Mad_VQ == "Average"])
+"Average CP for Consonants: Large"; mean(mydata_sub$CP[mydata_sub$Mad_VQ == "Large"]) ; "Standard Deviation" ; sd(mydata_sub$CP[mydata_sub$Mad_VQ == "Large"])
 
-boxplot(mydata_sub$CR~mydata_sub$Mad_VQ, main="Distribution of CP by Vowels", xlab="Vowels", ylab="CP")
+boxplot(mydata_sub$CP~mydata_sub$Mad_VQ, main="Distribution of CP by Vowels", xlab="Vowels", ylab="CP")
 
 ggplot(mydata_sub, aes(x = factor(Mad_VQ, 
-                      labels = c("Average","Large")),y = CR, fill=Mad_VQ)) +
+                      labels = c("Average","Large")),y = CP, fill=Mad_VQ)) +
   geom_boxjitter(color="black", jitter.color = "darkgrey", errorbar.draw = TRUE) +
   scale_y_continuous() +
   labs(title = "Distribution of CP by Vowels", 
@@ -303,49 +313,49 @@ mydata_sub_A <- subset(mydata_sub,  Mad_C=="Average")
 mydata_sub_L <- subset(mydata_sub,  Mad_C=="Large") 
 
 #summary(mydata_sub)
-"Moderately Small Mad_C"; cor.test(mydata_sub_S$age,mydata_sub_S$CR) #0.87546 
-"Average Mad_C"; cor.test(mydata_sub_A$age,mydata_sub_A$CR) #0.587497 
-"Large Mad_C"; cor.test(mydata_sub_L$age,mydata_sub_L$CR) #0.6306421 
+"Moderately Small Mad_C"; cor.test(mydata_sub_S$age,mydata_sub_S$CP) #0.87546 
+"Average Mad_C"; cor.test(mydata_sub_A$age,mydata_sub_A$CP) #0.587497 
+"Large Mad_C"; cor.test(mydata_sub_L$age,mydata_sub_L$CP) #0.6306421 
 
 ggqqplot(mydata_sub_A$age, ylab = "Age")+
   labs(title = "Pearson's correlations for Average Consonants by Age") 
-ggqqplot(mydata_sub_A$CR, ylab = "CR")+
-  labs(title = "Pearson's correlations for Average Consonants by CR") 
+ggqqplot(mydata_sub_A$CP, ylab = "CP")+
+  labs(title = "Pearson's correlations for Average Consonants by CP") 
 
 #check assumptions
 #Moderately Small Mad_C
-lm_Small <- lm(mydata_sub_S$CR~mydata_sub_S$age)
+lm_Small <- lm(mydata_sub_S$CP~mydata_sub_S$age)
 par(mfrow=c(2,2))
 plot(lm_Small, main="Moderately Small Mad_C")
 #Average Mad_C
-lm_Avg <- lm(mydata_sub_A$CR~mydata_sub_A$age)
+lm_Avg <- lm(mydata_sub_A$CP~mydata_sub_A$age)
 par(mfrow=c(2,2))
 plot(lm_Avg, main="Average Mad_C")  
 #Large Mad_C  
-lm_large <- lm(mydata_sub_L$CR~mydata_sub_L$age)
+lm_large <- lm(mydata_sub_L$CP~mydata_sub_L$age)
 par(mfrow=c(2,2))
 plot(lm_large, main="Moderately large Mad_C") 
 
 #Small vs. Average
 SvA <- subset(mydata_sub,  Mad_C!="Large")
-lm_SvA <- (lm(SvA$CR~SvA$age))
+lm_SvA <- (lm(SvA$CP~SvA$age))
 par(mfrow=c(2,2))
 plot(lm_SvA, main="Small vs. Average")
-"Small vs. Average"; anova(lm(SvA$CR~SvA$age*SvA$Mad_C))
+"Small vs. Average"; anova(lm(SvA$CP~SvA$age*SvA$Mad_C))
 
 #Average vs. Large
 AvL <- subset(mydata_sub,  Mad_C!="Moderately Small")
-lm_AvL <- (lm(AvL$CR~AvL$age))
+lm_AvL <- (lm(AvL$CP~AvL$age))
 par(mfrow=c(2,2))
 plot(lm_AvL, main="Average vs. Large")
-"Average vs. Large"; anova(lm(AvL$CR~AvL$age*AvL$Mad_C))
+"Average vs. Large"; anova(lm(AvL$CP~AvL$age*AvL$Mad_C))
 
 #Small vs. Large
 SvL <- subset(mydata_sub,  Mad_C!="Average")
-lm_SvL <- (lm(SvL$CR~SvL$age))
+lm_SvL <- (lm(SvL$CP~SvL$age))
 par(mfrow=c(2,2))
 plot(lm_SvL, main="Small vs. Large")#looks quite bad
-"Small vs. Large"; anova(lm(SvL$CR~SvL$age*SvL$Mad_C))
+"Small vs. Large"; anova(lm(SvL$CP~SvL$age*SvL$Mad_C))
 
 
 #Average vs. Large Vowels -----------------------------------------
@@ -355,51 +365,51 @@ mydata_sub_Av <- subset(mydata_sub,  Mad_VQ=="Average")
 mydata_sub_Lr <- subset(mydata_sub,  Mad_VQ=="Large")
 
 summary(mydata_sub)
-"Average Mad_VQ"; cor.test(mydata_sub_Av$age,mydata_sub_Av$CR,)  #0.4773039
-"Large Mad_VQ"; cor.test(mydata_sub_Lr$age,mydata_sub_Lr$CR)  #0.7266499
+"Average Mad_VQ"; cor.test(mydata_sub_Av$age,mydata_sub_Av$CP,)  #0.4773039
+"Large Mad_VQ"; cor.test(mydata_sub_Lr$age,mydata_sub_Lr$CP)  #0.7266499
 
 #check assumptions
 #Average Mad_VQ
-lm_Average <- lm(mydata_sub_Av$CR~mydata_sub_Av$age)
+lm_Average <- lm(mydata_sub_Av$CP~mydata_sub_Av$age)
 par(mfrow=c(2,2))
 plot(lm_Average, main="Average Mad_VQ")  
 #Large Mad_VQ 
-lm_lrg <- lm(mydata_sub_Lr$CR~mydata_sub_Lr$age) #
+lm_lrg <- lm(mydata_sub_Lr$CP~mydata_sub_Lr$age) #
 par(mfrow=c(2,2))
 plot(lm_lrg, main="Large Mad_VQ")#looks quite bad  
 
 
 #Average vs. Large
 AvvLr <- subset(mydata_sub)
-lm_AvvLr <- (lm(AvvLr$CR~AvvLr$age))
+lm_AvvLr <- (lm(AvvLr$CP~AvvLr$age))
 par(mfrow=c(2,2))
 plot(lm_AvvLr, main="Average vs. Large")
-"Average vs. Large"; anova(lm(AvvLr$CR~AvvLr$age*AvvLr$Mad_VQ))
+"Average vs. Large"; anova(lm(AvvLr$CP~AvvLr$age*AvvLr$Mad_VQ))
 
 
 # Some Models -----------------------------------------
 attach(mydata_sub)
-lm_data <- lm(CR ~ age + Mad_C + Mad_VQ, data = mydata_sub)
+lm_data <- lm(CP ~ age + Mad_C + Mad_VQ, data = mydata_sub)
 summary(lm_data)
-summary(lm(age ~ CR +  Mad_VQ + Mad_C))
+summary(lm(age ~ CP +  Mad_VQ + Mad_C))
 
 ggPredict(lm_data,se=TRUE,interactive=TRUE)
 
-lm_data_C <- lm(formula = CR~age*Mad_C, data = mydata_sub)
+lm_data_C <- lm(formula = CP~age*Mad_C, data = mydata_sub)
 summary(lm_data_C)
 ggPredict(lm_data_C,se=TRUE,interactive=TRUE)
 par(mfrow=c(2,2))
 plot(lm_data_C)  
 gvlma(lm_data_C) #Global Stat and Heteroscedasticity not satisfied
 
-lm_data_V <- lm(formula = CR~age*Mad_VQ, data = mydata_sub)
+lm_data_V <- lm(formula = CP~age*Mad_VQ, data = mydata_sub)
 summary(lm_data_V )
 ggPredict(lm_data_V ,se=TRUE,interactive=TRUE)
 par(mfrow=c(2,2))
 plot(lm_data_V)  
 gvlma(lm_data_V) # Heteroscedasticity not satisfied
 
-lm_data_SC <- lm(formula = CR ~ age * Mad_syl_comp, data = mydata_sub)
+lm_data_SC <- lm(formula = CP ~ age * Mad_syl_comp, data = mydata_sub)
 summary(lm_data_SC)
 ggPredict(lm_data_SC,se=TRUE,interactive=TRUE)
 par(mfrow=c(2,2))
@@ -412,17 +422,17 @@ Anova(lm_data_SC, type="III")
 
 ## TODO
 
-2) figure out how to go from zooniverse to cr ??
+2) figure out how to go from zooniverse to CP ??
 
-4) create merged dataset with both data from eaf & data from zooniverse
+4) CPeate merged dataset with both data from eaf & data from zooniverse
 
 - why do we have a separate spreadsheet for tsimane?
 - are there missing children?
 
 Comments:
-* GOG_000302: CR value is 0. Should we omit this child in this case?
+* GOG_000302: CP value is 0. Should we omit this child in this case?
 * For Tsimane children (from OSF) now we have 2 recordings -> a mean value of them is needed
-** I get - 16117 parsing failures when try to run raw_cychosz_data<- read_csv("Data/meta_answers_global_crossling_9-20.csv")
+** I get - 16117 parsing failures when try to run raw_cychosz_data<- read_csv("Data/meta_answers_global_CPossling_9-20.csv")
 ** My result is 63 children with all data (both phonetic and language complexity)
 *We lost Mod. Large Consonants in Queschua in our data
 
