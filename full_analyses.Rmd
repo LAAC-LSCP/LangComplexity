@@ -36,7 +36,7 @@ opts_chunk$set(echo = TRUE)
 
 ## Read in data
 
-```{r read-in}
+```{r read-in, eval=F}
 
 # 1. gen CP for all datasets
 
@@ -64,8 +64,8 @@ vcm_tab_chi_cychosz <- vcm_tab[,"Canonical"]/(vcm_tab[,"Canonical"]+vcm_tab[,"No
 # Generate canonical proportion for data from zooniverse #TODO
   #contains: Yélî & Tsimane
 
-other_data<- read_excel("Data/CP_by_child-updated_21_01.xlsx")
-other_data_tsi<- read_excel("Data/CP_by_child_tsi.xlsx")
+other_data<- read_excel("Data/CR_by_child-updated_21_01.xlsx")
+other_data_tsi<- read_excel("Data/CR_by_child_tsi.xlsx")
 
 #2. combine cp info w/ other info
 # we'll use the best and most data we can:
@@ -80,6 +80,7 @@ best_data=other_data[other_data$corpus %in% c("Yélî"),]
 
 #next, add tsi kids
 best_data2 <- rbind.fill(best_data,other_data_tsi)
+best_data2$CP=best_data2$CR
 
 #next, add French & Solomon 
 #to this end, first we need to add the CPs
@@ -136,6 +137,7 @@ best_data_final$syl_comp <- factor(best_data_final$`Syllable complexity`, levels
 best_data_final$lang <- as.factor(best_data_final$Language)
 
 best_data_final$age <-  as.numeric(coalesce(best_data_final$`Age in months`, best_data_final$Age))
+
 best_data_final <- best_data_final %>% 
   filter(age <= 40) #after this your data reduces to 85 observations (<40) which you care about.
 
@@ -150,20 +152,23 @@ write.csv(best_data_clean,"Data/best_data_clean.csv",row.names=F)
 
 ```{r read-in}
 
+read.csv("Data/best_data_clean.csv")->best_data_clean
+
 #DATASET WITH PHONETIC PROPERTIES ---------------------------------
 #adding a file with phonetic data  
 phon_data<- read_excel("C:/Users/Lenovo/Desktop/UNISI/ENS Traineeship/GIT/LangComplexity/Data/LAAC_Internship2020_Languages_upd.xlsx")
+phon_data<- read_excel("Data/LAAC_Internship2020_Languages_upd.xlsx")
 
 #MERGING TWO DATASETS TOGETHER
 #select the columns to merge from the Languages file
 phon_data <-phon_data %>% select(Language, Maddieson_C_inv, Maddieson_VQ_Inv, Maddieson_sylcomp)
 phon_data$lang <- as.factor(phon_data$Language)
+phon_data <- dplyr::distinct(phon_data) # TO GET RID OF DUPLICATES
 phon_data$Language <- NULL
 
 #merge the selected columns into one dataset
-mydata_sub<-merge(best_data_clean,phon_data, by="lang", all=T)  
-mydata_sub <- dplyr::distinct(mydata_sub) # TO GET RID OF DUPLICATES
-mydata_sub<-subset(mydata_sub, !is.na(CP)) #NA in CP are excluded -> 72 children
+mydata_sub<-merge(best_data_clean,phon_data, by="lang", all.x=T)  
+#mydata_sub<-subset(mydata_sub, !is.na(CP)) #NA in CP are excluded -> 72 children
 
 mydata_sub$Mad_syl_comp <- factor(mydata_sub$`Maddieson_sylcomp`, levels=c("Low","Moderate","High"))
 mydata_sub$Mad_C <- factor(mydata_sub$`Maddieson_C_inv`, levels=c("Moderately Small","Average","Large"))
@@ -173,13 +178,14 @@ mydata_sub$Maddieson_sylcomp <- NULL
 mydata_sub$Maddieson_C_inv <- NULL
 mydata_sub$Maddieson_VQ_Inv <- NULL
 
-mydata_sub<-subset(mydata_sub, !is.na(Mad_C)) #NA are excluded -> 63 children
+mydata_sub<-subset(mydata_sub, !is.na(Mad_C)) #NA are excluded -> 77 children
 
 #correction some definitions in data
 mydata_sub$C_count <- as.numeric(mydata_sub$C_count)
 mydata_sub$V_count <- as.numeric(mydata_sub$V_count)
 mydata_sub$corpus <- as.factor(mydata_sub$corpus)
 
+write.csv(mydata_sub,"Data/best_data_clean_wLang.csv",row.names=F)
 ```
 
 ## Graphs
