@@ -55,7 +55,7 @@ vcm_tab_chi_eaf <- vcm_tab[,"C"]/(vcm_tab[,"C"]+vcm_tab[,"N"])
 
 # Generate canonical proportion for data from cychosz
   #contains: Casillas-Yeli  Cychosz Seedlings    Tsimane    Warlaumont 
-raw_cychosz_data<- read_csv("Data/meta_answers_global_CPossling_9-20.csv")
+raw_cychosz_data<- read_csv("./Data/meta_answers_global_crossling_9-20.csv")
 raw_cychosz_data$unique_child_ID <- paste(raw_cychosz_data$language,raw_cychosz_data$child_ID)
 
 vcm_tab <- table(raw_cychosz_data$unique_child_ID,raw_cychosz_data$Answer)
@@ -168,7 +168,7 @@ phon_data$Language <- NULL
 
 #merge the selected columns into one dataset
 mydata_sub<-merge(best_data_clean,phon_data, by="lang", all.x=T)  
-#mydata_sub<-subset(mydata_sub, !is.na(CP)) #NA in CP are excluded -> 72 children
+#mydata_sub<-subset(mydata_sub, !is.na(CP)) #NA in CP are excluded 
 
 mydata_sub$Mad_syl_comp <- factor(mydata_sub$`Maddieson_sylcomp`, levels=c("Low","Moderate","High"))
 mydata_sub$Mad_C <- factor(mydata_sub$`Maddieson_C_inv`, levels=c("Moderately Small","Average","Large"))
@@ -320,7 +320,7 @@ mydata_sub_L <- subset(mydata_sub,  Mad_C=="Large")
 
 #summary(mydata_sub)
 "Moderately Small Mad_C"; cor.test(mydata_sub_S$age,mydata_sub_S$CP) #0.87546 
-"Average Mad_C"; cor.test(mydata_sub_A$age,mydata_sub_A$CP) #0.587497 
+"Average Mad_C"; cor.test(mydata_sub_A$age,mydata_sub_A$CP) #0.6519982  
 "Large Mad_C"; cor.test(mydata_sub_L$age,mydata_sub_L$CP) #0.6306421 
 
 ggqqplot(mydata_sub_A$age, ylab = "Age")+
@@ -329,14 +329,18 @@ ggqqplot(mydata_sub_A$CP, ylab = "CP")+
   labs(title = "Pearson's correlations for Average Consonants by CP") 
 
 #check assumptions
+
 #Moderately Small Mad_C
 lm_Small <- lm(mydata_sub_S$CP~mydata_sub_S$age)
 par(mfrow=c(2,2))
 plot(lm_Small, main="Moderately Small Mad_C")
+
+
 #Average Mad_C
 lm_Avg <- lm(mydata_sub_A$CP~mydata_sub_A$age)
 par(mfrow=c(2,2))
-plot(lm_Avg, main="Average Mad_C")  
+plot(lm_Avg, main="Average Mad_C")
+
 #Large Mad_C  
 lm_large <- lm(mydata_sub_L$CP~mydata_sub_L$age)
 par(mfrow=c(2,2))
@@ -370,9 +374,9 @@ plot(lm_SvL, main="Small vs. Large")#looks quite bad
 mydata_sub_Av <- subset(mydata_sub,  Mad_VQ=="Average")
 mydata_sub_Lr <- subset(mydata_sub,  Mad_VQ=="Large")
 
-summary(mydata_sub)
-"Average Mad_VQ"; cor.test(mydata_sub_Av$age,mydata_sub_Av$CP,)  #0.4773039
-"Large Mad_VQ"; cor.test(mydata_sub_Lr$age,mydata_sub_Lr$CP)  #0.7266499
+#summary(mydata_sub)
+"Average Mad_VQ"; cor.test(mydata_sub_Av$age,mydata_sub_Av$CP,)  #0.600084 
+"Large Mad_VQ"; cor.test(mydata_sub_Lr$age,mydata_sub_Lr$CP)  #0.7459597
 
 #check assumptions
 #Average Mad_VQ
@@ -406,14 +410,14 @@ summary(lm_data_C)
 ggPredict(lm_data_C,se=TRUE,interactive=TRUE)
 par(mfrow=c(2,2))
 plot(lm_data_C)  
-gvlma(lm_data_C) #Global Stat and Heteroscedasticity not satisfied
+gvlma(lm_data_C) #Heteroscedasticity not satisfied
 
 lm_data_V <- lm(formula = CP~age*Mad_VQ, data = mydata_sub)
 summary(lm_data_V )
 ggPredict(lm_data_V ,se=TRUE,interactive=TRUE)
 par(mfrow=c(2,2))
 plot(lm_data_V)  
-gvlma(lm_data_V) # Heteroscedasticity not satisfied
+gvlma(lm_data_V) #passes checks
 
 lm_data_SC <- lm(formula = CP ~ age * Mad_syl_comp, data = mydata_sub)
 summary(lm_data_SC)
@@ -436,9 +440,5 @@ Anova(lm_data_SC, type="III")
 - are there missing children?
 
 Comments:
-* GOG_000302: CP value is 0. Should we omit this child in this case?
-* For Tsimane children (from OSF) now we have 2 recordings -> a mean value of them is needed
-** I get - 16117 parsing failures when try to run raw_cychosz_data<- read_csv("Data/meta_answers_global_CPossling_9-20.csv")
-** My result is 63 children with all data (both phonetic and language complexity)
 *We lost Mod. Large Consonants in Queschua in our data
 
