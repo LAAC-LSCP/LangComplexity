@@ -33,6 +33,7 @@ opts_chunk$set(echo = TRUE)
 
 - increase reproducibility by using only groundhog
 - clean up the double child Id column name
+- TODO instead of using line numbers, use the child's IDs
 
 ## Read in data
 
@@ -171,14 +172,19 @@ mydata_sub<-merge(best_data_clean,phon_data, by="lang", all.x=T)
 #mydata_sub<-subset(mydata_sub, !is.na(CP)) #NA in CP are excluded 
 
 mydata_sub$Mad_syl_comp <- factor(mydata_sub$`Maddieson_sylcomp`, levels=c("Low","Moderate","High"))
-mydata_sub$Mad_C <- factor(mydata_sub$`Maddieson_C_inv`, levels=c("Moderately Small","Average","Large"))
+mydata_sub$Mad_C <- factor(mydata_sub$`Maddieson_C_inv`, levels=c("Moderately Small","Average","Large","Moderately large"))
 mydata_sub$Mad_VQ <-factor(mydata_sub$`Maddieson_VQ_Inv`, levels=c("Average","Large"))
 mydata_sub$syl_comp <- NULL
 mydata_sub$Maddieson_sylcomp <- NULL
 mydata_sub$Maddieson_C_inv <- NULL
 mydata_sub$Maddieson_VQ_Inv <- NULL
+dim(mydata_sub)
+table(mydata_sub$lang)
 
-mydata_sub<-subset(mydata_sub, !is.na(Mad_C)) #NA are excluded -> 77 children
+summary(mydata_sub)
+
+mydata_sub<-subset(mydata_sub, !is.na(Mad_C)) #NA are excluded -> 80 children
+dim(mydata_sub)
 
 #correction some definitions in data
 mydata_sub$C_count <- as.numeric(mydata_sub$C_count)
@@ -190,6 +196,12 @@ write.csv(mydata_sub,"Data/best_data_clean_wLang.csv",row.names=F)
 
 ## Graphs
 ```{r read-in}
+read.csv("Data/best_data_clean_wLang.csv")->mydata_sub
+
+mydata_sub$Mad_syl_comp <- factor(mydata_sub$Mad_syl_comp, levels=c("Low","Moderate","High"))
+mydata_sub$Mad_C <- factor(mydata_sub$Mad_C, levels=c("Moderately Small","Average","Large","Moderately Large"))
+mydata_sub$Mad_VQ <-factor(mydata_sub$Mad_VQ, levels=c("Average","Large"))
+
 summary(mydata_sub)
 dim(mydata_sub)
 
@@ -204,6 +216,7 @@ ggplot(mydata_sub,aes(x=CP,fill=Mad_C))+
   labs(x = "Canonical Proportion")+
   labs(y = "Consonants")+
   labs(title = 'Distributinon of Consonants')   
+
 
 ###Vowels 
 ggplot(mydata_sub,aes(x=CP,fill=Mad_VQ))+ 
@@ -398,7 +411,9 @@ plot(lm_AvvLr, main="Average vs. Large")
 
 
 # Some Models -----------------------------------------
-attach(mydata_sub)
+
+
+#
 lm_data <- lm(CP ~ age + Mad_C + Mad_VQ, data = mydata_sub)
 summary(lm_data)
 summary(lm(age ~ CP +  Mad_VQ + Mad_C))
@@ -430,15 +445,49 @@ Anova(lm_data_SC, type="III")
 
 ```
 
-## TODO
+## SRCD results
 
-2) figure out how to go from zooniverse to CP ??
+```{r}
 
-4) CPeate merged dataset with both data from eaf & data from zooniverse
+cor(mydata_sub[,c("age" , "C_count" , "V_count")])
+mydata_sub$Phon_count=mydata_sub$C_count+mydata_sub$V_count
 
-- why do we have a separate spreadsheet for tsimane?
-- are there missing children?
+cor(mydata_sub[,c("age" , "Phon_count")])
 
-Comments:
-*We lost Mod. Large Consonants in Queschua in our data
+hist(mydata_sub$Phon_count)
+hist(log(mydata_sub$Phon_count,10))
+mydata_sub$Phon_count_l10=log(mydata_sub$Phon_count,10)
 
+ggplot(mydata_sub, aes(x = factor(Mad_syl_comp),y = Phon_count_l10, fill=Mad_syl_comp)) +
+  geom_boxjitter(color="black", jitter.color = "darkgrey", errorbar.draw = TRUE) +
+  scale_y_continuous() +
+  labs(title = "Distribution of Phon_count_l10 by Mad_syl_comp", 
+       x = "",
+       y = "") +
+  theme_minimal() +
+  theme(legend.position = "none") 
+
+library(lme4)
+lm_data <- lmer(CP ~ age + Phon_count_l10 + Mad_syl_comp + (1|lang), data = mydata_sub)
+plot(lm_data)
+summary(lm_data)
+```
+
+Homework:
+- why are Mad_syl_compModerate and Mad_syl_compHigh negative?
+- why are they significant?
+- what does this mean for our predictions?
+
+```{r}
+lm_data <- lmer(CP ~ age  + Mad_syl_comp + (1|lang), data = mydata_sub)
+plot(lm_data)
+summary(lm_data)
+
+```
+
+Homework:
+- what is the difference between this model and the previous one?
+- are age, Mad_syl_compModerate and Mad_syl_compHigh significant?
+- why?
+- what do their estimates mean?
+- what does this mean for our predictions?
