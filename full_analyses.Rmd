@@ -12,6 +12,9 @@ library(car) # I wasn't able to run this package from groundhog in Windows
 #new library for graphs
 library(ggpubr) 
 library(ggiraphExtra)
+library(ggridges)
+library(ggpol)
+library(scales)
 
 library(groundhog)
 groundhog.day="2021-02-23"
@@ -196,35 +199,19 @@ write.csv(mydata_sub,"Data/best_data_clean_wLang.csv",row.names=F)
 
 ## Graphs
 ```{r read-in}
-read.csv("Data/best_data_clean_wLang.csv")->mydata_sub
+#read.csv("Data/best_data_clean_wLang.csv")->mydata_sub
 
 mydata_sub$Mad_syl_comp <- factor(mydata_sub$Mad_syl_comp, levels=c("Low","Moderate","High"))
-mydata_sub$Mad_C <- factor(mydata_sub$Mad_C, levels=c("Moderately Small","Average","Large","Moderately Large"))
+mydata_sub$Mad_C <- factor(mydata_sub$Mad_C, levels=c("Moderately Small","Average","Large","Moderately large"))
 mydata_sub$Mad_VQ <-factor(mydata_sub$Mad_VQ, levels=c("Average","Large"))
 
 summary(mydata_sub)
 dim(mydata_sub)
 
 #Histograms
-hist(mydata_sub$CP,main="CP",xlab="CP") #quite normally distributed
+hist(mydata_sub$CP,main="CP",xlab="CP")  
 
 #Plots
-###Consonants - doesn't look impressive. The data quite unbalanced with average property leading
-ggplot(mydata_sub,aes(x=CP,fill=Mad_C))+  
-  geom_histogram(bins=20,color="black") + 
-  facet_grid(.~Mad_C)+
-  labs(x = "Canonical Proportion")+
-  labs(y = "Consonants")+
-  labs(title = 'Distributinon of Consonants')   
-
-
-###Vowels 
-ggplot(mydata_sub,aes(x=CP,fill=Mad_VQ))+ 
-  geom_histogram(bins=20,color="black") + 
-  facet_grid(.~Mad_VQ)+
-  labs(x = "Canonical Proportion")+
-  labs(y = "Vowels")+
-  labs(title = 'Distributinon of Vowels') 
 
 library("ggridges")
 ggplot(mydata_sub,aes(x = age, y = Mad_syl_comp)) +
@@ -249,6 +236,7 @@ ggplot(mydata_sub,aes(x = CP, y = Mad_VQ)) +
   labs(y = "Vowels")+
   labs(title = 'Distributinon of Vowels') 
 
+
 ggscatter(
   mydata_sub, x = "CP", y = "age",
   facet.by  = c("Mad_VQ", "Mad_syl_comp"), 
@@ -272,6 +260,73 @@ ggplot(mydata_sub, aes(x=age, y=CP, color=lang)) +
   # Add regression lines
   geom_smooth(method=lm,se=FALSE)
 
+ggplot(mydata_sub, aes(x=age, y=CP, color=Mad_C, shape=Mad_C)) +
+  labs(title = "Distribution of CP wrt. Age (up to 40 months)")+
+  labs(colour = "Consonants", shape="Consonants")+
+  theme_bw()+
+  theme(panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank())+
+ # scale_color_manual(values=c("#E69F00", "#56B4E9", "#009E73"))+
+ # scale_shape_manual(values=c(4, 16, 0))+
+  labs(x = "Age (months)")+
+  labs(y = "CP")+
+  geom_point(size=2.5)+
+  # Add regression lines
+  geom_smooth(method=lm, se=FALSE)
+  # Add loess lines
+  #geom_smooth(span = 0.8)
+
+
+ggplot(mydata_sub, aes(x=age, y=CP, color=Mad_VQ, shape=Mad_VQ)) +
+  labs(title = "Distribution of CP wrt. Age (up to 40 months)")+
+  labs(colour = "Vowels", shape="Vowels")+
+  theme_bw()+
+  theme(panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank())+
+  scale_color_manual(values=c("#E69F00", "#56B4E9", "#009E73"))+
+  scale_shape_manual(values=c(4, 16, 0))+
+  labs(x = "Age (months)")+
+  labs(y = "CP")+
+  geom_point(size=2.5)+
+  # Add regression lines
+  geom_smooth(method=lm, se=FALSE)
+# Add loess lines
+#geom_smooth(span = 0.8)
+
+#1- a xyplot for CP predicted by (=as a function of) both age (x axis) and Mad_syl_comp (line types/colors)
+ggplot(mydata_sub, aes(x=age, y=CP, color=Mad_syl_comp , shape= Mad_syl_comp)) +
+  labs(title = "Distribution of CP wrt. Age (up to 40 months)")+
+  labs(colour = "Syllable Complexity", shape="Syllable Complexity")+
+  theme_bw()+
+  theme(panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank())+
+  scale_color_manual(values=c("#E69F00", "#56B4E9", "#009E73"))+
+  scale_shape_manual(values=c(4, 16, 0))+
+  labs(x = "Age (months)")+
+  labs(y = "CP")+
+  geom_point(size=2.5)+
+  # Add regression lines
+  geom_smooth(method=lm, se=FALSE)
+# Add loess lines
+#geom_smooth(span = 0.8)
+
+#2- a xyplot for CP predicted by (=as a function of) Phon complexity 
+ggplot(mydata_sub, aes(x=Phon_count, y=CP, color=Mad_syl_comp))  +
+  labs(title = "Distribution of CP wrt. Phonological complexity")+
+  labs(colour = "Syllable Complexity", shape="Syllable Complexity")+
+  theme_bw()+
+  theme(panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank())+
+#  scale_color_manual(values=c("#E69F00", "#56B4E9", "#009E73"))+
+ # scale_shape_manual(values=c(4, 16, 0))+
+  labs(x = "Phonological complexity")+
+  labs(y = "CP")+
+  geom_point(size=2.5)+
+  # Add regression lines
+  geom_smooth(method=lm, se=FALSE)
+# Add loess lines
+#geom_smooth(span = 0.8)
+
 
 ```
 
@@ -291,7 +346,7 @@ boxplot(mydata_sub$CP~mydata_sub$Mad_C, main="Distribution of CP by Consonants",
 library(ggpol)
 library(scales)
 ggplot(mydata_sub, aes(x = factor(Mad_C, 
-                      labels = c("Moderately Small","Average","Large")),y = CP, fill=Mad_C)) +
+                      labels = c("Moderately Small","Average","Large","Moderately large")),y = CP, fill=Mad_C)) +
   geom_boxjitter(color="black", jitter.color = "darkgrey", errorbar.draw = TRUE) +
   scale_y_continuous() +
   labs(title = "Distribution of CP by Consonants", 
@@ -388,7 +443,7 @@ mydata_sub_Av <- subset(mydata_sub,  Mad_VQ=="Average")
 mydata_sub_Lr <- subset(mydata_sub,  Mad_VQ=="Large")
 
 #summary(mydata_sub)
-"Average Mad_VQ"; cor.test(mydata_sub_Av$age,mydata_sub_Av$CP,)  #0.600084 
+"Average Mad_VQ"; cor.test(mydata_sub_Av$age,mydata_sub_Av$CP,)  #0.5963248 
 "Large Mad_VQ"; cor.test(mydata_sub_Lr$age,mydata_sub_Lr$CP)  #0.7459597
 
 #check assumptions
@@ -454,7 +509,7 @@ mydata_sub$Phon_count=mydata_sub$C_count+mydata_sub$V_count
 
 cor(mydata_sub[,c("age" , "Phon_count")])
 
-hist(mydata_sub$Phon_count)
+#hist(mydata_sub$Phon_count)
 hist(log(mydata_sub$Phon_count,10))
 mydata_sub$Phon_count_l10=log(mydata_sub$Phon_count,10)
 
